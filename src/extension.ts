@@ -37,6 +37,7 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
+    // get reviews and show a quick pick list
     let getReviews = vscode.commands.registerCommand('upsource.getReviews', () => {
         getReviewList().then(res => {
             let totalCount = res.totalCount,
