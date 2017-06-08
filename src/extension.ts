@@ -63,15 +63,13 @@ export function activate(context: vscode.ExtensionContext) {
                     totalCount = result.totalCount,
                     reviews = result.reviews;
                     
-                console.log(reviews);
-                
                 if (!totalCount) vscode.window.showInformationMessage('No open Reviews.');
                 else {
                     let items = reviews.map((review) => {
                         return {
                             label: review.reviewId.reviewId,
                             detail: review.title,
-                            description: 'open'
+                            description: review.state == 1 ? 'open' : 'closed'
                         }
                     });
                     vscode.window.showQuickPick(items);
