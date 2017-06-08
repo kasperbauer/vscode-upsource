@@ -74,7 +74,7 @@ function checkForOpenReviews() {
     });
 }
 
-function getReviewListWithState(state) {
+function getReviewListWithState(state: string) {
     return new Promise<ReviewListDTO>((resolve, reject) => {
         getConfig().then(
             (config: UpsConfig) => {
@@ -105,7 +105,8 @@ function getReviewListWithState(state) {
                             reject(err);
                             return;
                         }
-
+                        console.log(body.result);
+                        
                         resolve(body.result);
                     }
                 );
