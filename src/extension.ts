@@ -76,6 +76,8 @@ function checkForOpenReviews() {
 
 function getReviewListWithState(state: string) {
     return new Promise<ReviewListDTO>((resolve, reject) => {
+        let statusBarMessage = vscode.window.setStatusBarMessage('Fetching Reviews');
+
         getConfig().then(
             (config: UpsConfig) => {
                 request(
@@ -106,12 +108,14 @@ function getReviewListWithState(state: string) {
                             return;
                         }
                         console.log(body.result);
-                        
+                        statusBarMessage.dispose();
+
                         resolve(body.result);
                     }
                 );
             },
             err => {
+                statusBarMessage.dispose();
                 reject(err);
             }
         );
