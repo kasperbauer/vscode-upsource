@@ -6,6 +6,7 @@ import * as request from 'request';
 import * as _ from 'lodash';
 
 import { UpsConfig } from './models/UpsConfig';
+import { ReviewListDTO } from './models/ReviewListDTO';
 
 export function activate(context: vscode.ExtensionContext) {
     checkForOpenReviews();
@@ -38,14 +39,14 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     // get reviews and show a quick pick list
-    let getReviews = vscode.commands.registerCommand('upsource.getReviews', () => {
-        getReviewList().then(res => {
+    let getOpenReviews = vscode.commands.registerCommand('upsource.getOpenReviews', () => {
+        getReviewListWithState('open').then(res => {
             let totalCount = res.totalCount,
                 reviews = res.reviews;
 
             console.log(res);
 
-            if (!totalCount) vscode.window.showInformationMessage('No Reviews.');
+            if (!totalCount) vscode.window.showInformationMessage('No open reviews.');
             else {
                 let items = reviews.map(review => {
                     return {
@@ -60,11 +61,11 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(setup);
-    context.subscriptions.push(getReviews);
+    context.subscriptions.push(getOpenReviews);
 }
 
 function checkForOpenReviews() {
-    getReviewList().then(res => {
+    getReviewListWithState('open').then(res => {
         if (res.totalCount) {
             vscode.window.showInformationMessage(
                 'There are Upsource Reviews for this project available.'
@@ -73,8 +74,8 @@ function checkForOpenReviews() {
     });
 }
 
-function getReviewList() {
-    return new Promise<any>((resolve, reject) => {
+function getReviewListWithState(state) {
+    return new Promise<ReviewListDTO>((resolve, reject) => {
         getConfig().then(
             (config: UpsConfig) => {
                 request(
@@ -92,7 +93,8 @@ function getReviewList() {
                         json: true,
                         body: {
                             projectId: config.projectId,
-                            limit: 99
+                            limit: 99,
+                            query: 'state: ' + state
                         }
                     },
                     (err, response, body) => {
