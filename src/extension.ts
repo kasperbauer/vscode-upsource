@@ -10,33 +10,14 @@ import { UpsConfig } from './models/UpsConfig';
 import { ReviewListDTO } from './models/ReviewListDTO';
 
 const rootPath = vscode.workspace.rootPath,
-      configFilePath = rootPath + '/upsource.json';
+    configFilePath = rootPath + '/upsource.json';
 
 export function activate(context: vscode.ExtensionContext) {
     checkForOpenReviews();
 
     // create upsource.json config file with defaults
     let setup = vscode.commands.registerCommand('upsource.setup', () => {
-        let defaultSettings = {
-            url: '',
-            login: '',
-            password: ''
-        };
-
-        fs.access(configFilePath, fs.constants.F_OK, err => {
-            if (!err) {
-                vscode.window.showInformationMessage('upsource.json already exists.');
-                showFileInTextEditor(configFilePath);
-                return;
-            }
-
-            fs.writeFile(configFilePath, JSON.stringify(defaultSettings), 'utf8', err => {
-                showFileInTextEditor(configFilePath);
-                vscode.window.showInformationMessage(
-                    'upsource.json has been created successfully.'
-                );
-            });
-        });
+        createAndOpenConfigFileIfNotExists();
     });
 
     // get open reviews and show a quick pick list
@@ -61,6 +42,28 @@ function checkForOpenReviews() {
                 'There are Upsource Reviews for this project available.'
             );
         }
+    });
+}
+
+function createAndOpenConfigFileIfNotExists() {
+    let defaultSettings = {
+        url: 'url to your upsource installation',
+        login: 'your username',
+        password: 'your password',
+        projectId: 'id of the corresponding upsource project',
+    };
+
+    fs.access(configFilePath, fs.constants.F_OK, err => {
+        if (!err) {
+            vscode.window.showInformationMessage('upsource.json already exists.');
+            showFileInTextEditor(configFilePath);
+            return;
+        }
+
+        fs.writeFile(configFilePath, JSON.stringify(defaultSettings), 'utf8', err => {
+            showFileInTextEditor(configFilePath);
+            vscode.window.showInformationMessage('upsource.json has been created successfully.');
+        });
     });
 }
 
