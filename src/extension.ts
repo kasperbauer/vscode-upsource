@@ -72,8 +72,6 @@ function showReviewQuickPicks(state?: string) {
         let totalCount = res.totalCount,
             reviews = res.reviews;
 
-        console.log(res);
-
         if (!totalCount) vscode.window.showInformationMessage('No ' + state + ' reviews.');
         else {
             let items = reviews.map(review => {
