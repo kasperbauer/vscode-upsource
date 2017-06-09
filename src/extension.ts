@@ -73,6 +73,9 @@ function showReviewQuickPicks(state?: string) {
         if (!totalCount) vscode.window.showInformationMessage('No ' + state + ' reviews.');
         else {
             let items = reviews.map(review => {
+                let label = review.reviewId.reviewId;
+                if (review.isUnread) label += ' *';
+                
                 let detail = review.state == 1 ? '️⚠️  open' : '✅  closed';
                 detail += ', ' + review.participants.length + ' participants';
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
