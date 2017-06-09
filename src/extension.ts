@@ -46,12 +46,12 @@ function checkForOpenReviews() {
 }
 
 function createAndOpenConfigFileIfNotExists() {
-    let defaultSettings = {
-        url: 'url to your upsource installation',
-        login: 'your username',
-        password: 'your password',
-        projectId: 'id of the corresponding upsource project',
-    };
+    let defaultSettings = `{
+        "url": "",
+        "login": "",
+        "password": "",
+        "projectId": ""
+    }`;
 
     fs.access(configFilePath, fs.constants.F_OK, err => {
         if (!err) {
@@ -60,10 +60,24 @@ function createAndOpenConfigFileIfNotExists() {
             return;
         }
 
-        fs.writeFile(configFilePath, JSON.stringify(defaultSettings), 'utf8', err => {
+        fs.writeFile(configFilePath, defaultSettings, 'utf8', err => {
             showFileInTextEditor(configFilePath);
             vscode.window.showInformationMessage('upsource.json has been created successfully.');
         });
+    });
+}
+
+function showFileInTextEditor(filePath): Promise<vscode.TextDocument> {
+    return new Promise<vscode.TextDocument>((resolve, reject) => {
+        vscode.workspace.openTextDocument(filePath).then(
+            (textDocument: vscode.TextDocument) => {
+                vscode.window.showTextDocument(textDocument);
+                resolve(textDocument);
+            },
+            err => {
+                reject(err);
+            }
+        );
     });
 }
 
@@ -149,12 +163,6 @@ function getReviewListWithState(state: string) {
                 reject(err);
             }
         );
-    });
-}
-
-function showFileInTextEditor(filePath) {
-    vscode.workspace.openTextDocument(filePath).then((textDocument: vscode.TextDocument) => {
-        vscode.window.showTextDocument(textDocument);
     });
 }
 
