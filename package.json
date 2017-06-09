@@ -1,8 +1,8 @@
 {
   "name": "vscode-upsource",
   "displayName": "vscode-upsource",
-  "description": "",
-  "version": "0.0.1",
+  "description": "Shows a list of your upsource reviews.",
+  "version": "1.0.0",
   "publisher": "kasperbauer",
   "engines": {
     "vscode": "^1.12.0"
