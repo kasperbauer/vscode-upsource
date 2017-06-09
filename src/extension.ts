@@ -9,6 +9,9 @@ import * as opn from 'opn';
 import { UpsConfig } from './models/UpsConfig';
 import { ReviewListDTO } from './models/ReviewListDTO';
 
+const rootPath = vscode.workspace.rootPath,
+      configFilePath = rootPath + '/upsource.json';
+
 export function activate(context: vscode.ExtensionContext) {
     checkForOpenReviews();
 
@@ -20,18 +23,15 @@ export function activate(context: vscode.ExtensionContext) {
             password: ''
         };
 
-        let rootPath = vscode.workspace.rootPath,
-            filePath = rootPath + '/upsource.json';
-
-        fs.access(filePath, fs.constants.F_OK, err => {
+        fs.access(configFilePath, fs.constants.F_OK, err => {
             if (!err) {
                 vscode.window.showInformationMessage('upsource.json already exists.');
-                showFileInTextEditor(filePath);
+                showFileInTextEditor(configFilePath);
                 return;
             }
 
-            fs.writeFile(filePath, JSON.stringify(defaultSettings), 'utf8', err => {
-                showFileInTextEditor(filePath);
+            fs.writeFile(configFilePath, JSON.stringify(defaultSettings), 'utf8', err => {
+                showFileInTextEditor(configFilePath);
                 vscode.window.showInformationMessage(
                     'upsource.json has been created successfully.'
                 );
@@ -86,11 +86,16 @@ function showReviewQuickPicks(state?: string) {
                 return { label, description, detail, review };
             });
 
-            vscode.window.showQuickPick(items).then((selectedItem) => {
+            vscode.window.showQuickPick(items).then(selectedItem => {
                 if (!selectedItem) return;
-                
-                getConfig().then((config) => {
-                    let url = config.url + '/' + config.projectId + '/review/' + selectedItem.review.reviewId.reviewId;
+
+                getConfig().then(config => {
+                    let url =
+                        config.url +
+                        '/' +
+                        config.projectId +
+                        '/review/' +
+                        selectedItem.review.reviewId.reviewId;
                     opn(url);
                 });
             });
@@ -153,18 +158,15 @@ function showFileInTextEditor(filePath) {
 }
 
 function getConfig(): Promise<UpsConfig> {
-    let rootPath = vscode.workspace.rootPath,
-        filePath = rootPath + '/upsource.json';
-
     return new Promise<UpsConfig>((resolve, reject) => {
-        fs.access(filePath, fs.constants.R_OK, err => {
+        fs.access(configFilePath, fs.constants.R_OK, err => {
             if (err) {
                 vscode.window.showInformationMessage('upsource.json is not readable.');
                 reject(err);
                 return;
             }
 
-            fs.readFile(filePath, 'utf8', function(err, data) {
+            fs.readFile(configFilePath, 'utf8', function(err, data) {
                 if (err) reject(err);
                 else resolve(<UpsConfig>JSON.parse(data));
             });
