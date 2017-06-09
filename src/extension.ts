@@ -38,8 +38,8 @@ export function activate(context: vscode.ExtensionContext) {
         });
     });
 
-    // get reviews and show a quick pick list
-    let getOpenReviews = vscode.commands.registerCommand('upsource.getOpenReviews', () => {
+    // get open reviews and show a quick pick list
+    let openReviews = vscode.commands.registerCommand('upsource.openReviews', () => {
         getReviewListWithState('open').then(res => {
             let totalCount = res.totalCount,
                 reviews = res.reviews;
@@ -61,7 +61,7 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     context.subscriptions.push(setup);
-    context.subscriptions.push(getOpenReviews);
+    context.subscriptions.push(openReviews);
 }
 
 function checkForOpenReviews() {

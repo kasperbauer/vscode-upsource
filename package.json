@@ -23,8 +23,8 @@
         "title": "Upsource: Setup"
       },
       {
-        "command": "upsource.getOpenReviews",
-        "title": "Upsource: Get Open Reviews"
+        "command": "upsource.openReviews",
+        "title": "Upsource: Open Reviews"
       }
     ]
   },
