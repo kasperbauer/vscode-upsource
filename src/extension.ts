@@ -75,7 +75,7 @@ function showReviewQuickPicks(state?: string) {
             let items = reviews.map(review => {
                 let detail = review.state == 1 ? '️⚠️  open' : '✅  closed';
                 detail += ', ' + review.participants.length + ' participants';
-                detail += ', ' + review.discussionCounter.counter + ' comments';
+                detail += ', ' + review.discussionCounter.counter + ' discussions';
 
                 return {
                     label: review.reviewId.reviewId,
