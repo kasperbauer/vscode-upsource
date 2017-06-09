@@ -130,7 +130,7 @@ function getReviewListWithState(state: string) {
                         }
                     },
                     (err, response, body) => {
-                        if (response.statusCode != 200) {
+                        if (err || response.statusCode != 200) {
                             vscode.window.showInformationMessage(
                                 'Upsource server is not reachable or responded with an error. Please check your upsource.json.'
                             );
