@@ -3,7 +3,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as request from 'request';
-import * as _ from 'lodash';
 import * as opn from 'opn';
 
 import { UpsConfig } from './models/UpsConfig';

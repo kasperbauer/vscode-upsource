@@ -48,8 +48,6 @@
   },
   "dependencies": {
     "@types/request": "0.0.43",
-    "fs": "^0.0.2",
-    "lodash": "^4.17.4",
     "opn": "^5.0.0",
     "request": "^2.81.0"
   }
