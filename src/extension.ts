@@ -75,16 +75,14 @@ function showReviewQuickPicks(state?: string) {
             let items = reviews.map(review => {
                 let label = review.reviewId.reviewId;
                 if (review.isUnread) label += ' *';
-                
+
+                let description = review.title;
+
                 let detail = review.state == 1 ? '️⚠️  open' : '✅  closed';
                 detail += ', ' + review.participants.length + ' participants';
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
 
-                return {
-                    label: review.reviewId.reviewId,
-                    description: review.title,
-                    detail
-                };
+                return { label, description, detail };
             });
             vscode.window.showQuickPick(items);
         }
