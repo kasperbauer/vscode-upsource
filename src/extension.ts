@@ -9,8 +9,14 @@ import * as opn from 'opn';
 import { UpsConfig } from './models/UpsConfig';
 import { ReviewListDTO } from './models/ReviewListDTO';
 
-const rootPath = vscode.workspace.rootPath,
-    configFilePath = rootPath + '/upsource.json';
+const rootPath = vscode.workspace.rootPath;
+const configFilePath = rootPath + '/upsource.json';
+const defaultSettings = `{
+    "url": "",
+    "login": "",
+    "password": "",
+    "projectId": ""
+}`;
 
 export function activate(context: vscode.ExtensionContext) {
     checkForOpenReviews();
@@ -46,13 +52,6 @@ function checkForOpenReviews() {
 }
 
 function createAndOpenConfigFileIfNotExists() {
-    let defaultSettings = `{
-        "url": "",
-        "login": "",
-        "password": "",
-        "projectId": ""
-    }`;
-
     fs.access(configFilePath, fs.constants.F_OK, err => {
         if (!err) {
             vscode.window.showInformationMessage('upsource.json already exists.');
