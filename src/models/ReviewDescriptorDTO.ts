@@ -1,10 +1,12 @@
+import { ParticipantInReviewDTO } from './ParticipantInReviewDTO';
 import { ReviewIdDTO } from './ReviewIdDTO';
+import { SimpleDiscussionCounterDTO } from './SimpleDiscussionCounterDTO';
 
 export class ReviewDescriptorDTO {
     constructor(
         public reviewId: ReviewIdDTO,
         public title: string,
-        // public participants: ParticipantInReviewDTO,
+        public participants: ParticipantInReviewDTO[],
         public state: number, // 1 = open, 2 = closed
         public branch: string[],
         // public issue: IssueIdDTO[],
@@ -13,6 +15,6 @@ export class ReviewDescriptorDTO {
         public isReadToClose?: boolean,
         public isRemoved?: boolean,
         // public completionRate?: CompletionRateDTO,
-        // public discussionCounter?: SimpleDiscussionCounterDTO
+        public discussionCounter?: SimpleDiscussionCounterDTO
     ) {}
 };

@@ -73,10 +73,14 @@ function showReviewQuickPicks(state?: string) {
         if (!totalCount) vscode.window.showInformationMessage('No ' + state + ' reviews.');
         else {
             let items = reviews.map(review => {
+                let detail = review.state == 1 ? '️⚠️  open' : '✅  closed';
+                detail += ', ' + review.participants.length + ' participants';
+                detail += ', ' + review.discussionCounter.counter + ' comments';
+
                 return {
                     label: review.reviewId.reviewId,
-                    detail: review.title,
-                    description: review.state == 1 ? 'open ⚠️' : 'closed ✅'
+                    description: review.title,
+                    detail
                 };
             });
             vscode.window.showQuickPick(items);
