@@ -87,6 +87,8 @@ function showReviewQuickPicks(state?: string) {
             });
 
             vscode.window.showQuickPick(items).then((selectedItem) => {
+                if (!selectedItem) return;
+                
                 getConfig().then((config) => {
                     let url = config.url + '/' + config.projectId + '/review/' + selectedItem.review.reviewId.reviewId;
                     opn(url);
