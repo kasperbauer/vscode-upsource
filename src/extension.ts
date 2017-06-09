@@ -45,7 +45,7 @@ function checkForOpenReviews() {
     getReviewListWithState('open').then(res => {
         if (res.totalCount) {
             vscode.window.showInformationMessage(
-                'There are Upsource Reviews for this project available.'
+                'There are open Upsource reviews for this project.'
             );
         }
     });
