@@ -48,6 +48,8 @@ function checkForOpenReviews() {
                 'There are open Upsource reviews for this project.'
             );
         }
+    }, (err) => {
+        console.log(err);
     });
 }
 
