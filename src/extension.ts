@@ -4,6 +4,7 @@ import * as vscode from 'vscode';
 import * as fs from 'fs';
 import * as request from 'request';
 import * as _ from 'lodash';
+import * as opn from 'opn';
 
 import { UpsConfig } from './models/UpsConfig';
 import { ReviewListDTO } from './models/ReviewListDTO';
@@ -82,9 +83,15 @@ function showReviewQuickPicks(state?: string) {
                 detail += ', ' + review.participants.length + ' participants';
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
 
-                return { label, description, detail };
+                return { label, description, detail, review };
             });
-            vscode.window.showQuickPick(items);
+
+            vscode.window.showQuickPick(items).then((selectedItem) => {
+                getConfig().then((config) => {
+                    let url = config.url + '/' + config.projectId + '/review/' + selectedItem.review.reviewId.reviewId;
+                    opn(url);
+                });
+            });
         }
     });
 }
