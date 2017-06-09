@@ -82,7 +82,7 @@ function showReviewQuickPicks(state?: string) {
 
                 let description = review.title;
 
-                let detail = review.state == 1 ? '️⚠️  open' : '✅  closed';
+                let detail = review.state == 1 ? '️⚠️ open' : '✅ closed';
                 detail += ', ' + review.participants.length + ' participants';
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
 
