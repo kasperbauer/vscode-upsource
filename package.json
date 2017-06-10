@@ -14,6 +14,7 @@
     "onCommand:upsource.setup",
     "onCommand:upsource.getReviews",
     "onCommand:upsource.allReviews",
+    "onCommand:upsource.createReview",
     "workspaceContains:upsource.json"
   ],
   "main": "./out/src/extension",
@@ -30,6 +31,10 @@
       {
         "command": "upsource.allReviews",
         "title": "Upsource: All Reviews"
+      },
+      {
+        "command": "upsource.createReview",
+        "title": "Upsource: Create Review"
       }
     ]
   },
@@ -48,6 +53,7 @@
   },
   "dependencies": {
     "@types/request": "0.0.43",
+    "git-rev-sync": "^1.9.1",
     "opn": "^5.0.0",
     "request": "^2.81.0"
   }

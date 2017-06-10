@@ -2,11 +2,14 @@
 
 import * as vscode from 'vscode';
 import * as opn from 'opn';
+import * as git from 'git-rev-sync';
 
 import Config from './Config';
 import Upsource from './Upsource';
 import { ReviewListDTO } from './models/ReviewListDTO';
 import { UpsConfig } from './models/UpsConfig';
+
+const rootPath = vscode.workspace.rootPath;
 
 export function activate(context: vscode.ExtensionContext) {
     checkForOpenReviews();
@@ -26,12 +29,52 @@ export function activate(context: vscode.ExtensionContext) {
         showReviewQuickPicks();
     });
 
+    // create review from current branch / revision
+    let createReview = vscode.commands.registerCommand('upsource.createReview', () => {
+        let items = [
+            {
+                label: 'For current branch',
+                description: git.branch(rootPath),
+                branch: git.branch(rootPath),
+                revisions: null
+            },
+            {
+                label: 'For most recent commit',
+                description: git.short(rootPath),
+                branch: null,
+                revisions: [ git.long(rootPath) ]
+            }
+        ];
+
+        vscode.window.showQuickPick(items).then(selectedItem => {
+            if (!selectedItem) return;
+
+            Upsource.createReview(selectedItem.branch, selectedItem.revisions).then((review) => {
+                if (!review) {
+                    vscode.window.showErrorMessage(
+                        'Review could not be created.'
+                    );
+                    return;
+                }
+                
+                vscode.window.showInformationMessage(
+                    'Review \'' + review.title + '\' successfully created.'
+                );
+            }, (err) => {
+                vscode.window.showErrorMessage(
+                    'Review could not be created.'
+                );
+            });
+        });
+    });
+
     context.subscriptions.push(setup);
     context.subscriptions.push(openReviews);
     context.subscriptions.push(allReviews);
+    context.subscriptions.push(createReview);
 }
 
-function checkForOpenReviews() {
+function checkForOpenReviews(): void {
     Upsource.getReviewListWithState('open').then(
         res => {
             if (res.totalCount) {
@@ -46,7 +89,7 @@ function checkForOpenReviews() {
     );
 }
 
-function showReviewQuickPicks(state?: string) {
+function showReviewQuickPicks(state?: string): void {
     Upsource.getReviewListWithState(state).then(res => {
         let totalCount = res.totalCount,
             reviews = res.reviews;
@@ -82,5 +125,7 @@ function showReviewQuickPicks(state?: string) {
         }
     });
 }
+
+function createReview(): void {}
 
 export function deactivate() {}

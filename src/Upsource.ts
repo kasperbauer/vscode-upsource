@@ -1,3 +1,4 @@
+import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import * as vscode from 'vscode';
 import * as request from 'request';
 
@@ -70,9 +71,37 @@ function getReviewListWithState(state: string): Promise<ReviewListDTO> {
     });
 }
 
+function createReview(
+    branch: string = null,
+    revisions: string[] = null
+): Promise<ReviewDescriptorDTO> {
+    return new Promise<ReviewDescriptorDTO>((resolve, reject) => {
+        console.log(branch, revisions);
+        
+        if (!branch && !revisions) {
+            reject();
+            return;
+        }
+
+        let params = {};
+        if (branch) params = Object.assign(params, { branch });
+        if (revisions) params = Object.assign(params, { revisions });
+
+        // TODO: error handling
+        sendAPIRequest('createReview', 'POST', params).then(
+            res => {
+                console.log(res);
+                resolve(res);
+            },
+            err => {
+                console.log(err);
+                reject(err);
+            }
+        );
+    });
 }
 
 export default {
-    sendAPIRequest,
-    getReviewListWithState
+    getReviewListWithState,
+    createReview
 };
