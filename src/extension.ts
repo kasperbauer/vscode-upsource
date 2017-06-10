@@ -1,8 +1,6 @@
 'use strict';
 
 import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as request from 'request';
 import * as opn from 'opn';
 
 import Config from './Config';
