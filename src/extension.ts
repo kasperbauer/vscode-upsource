@@ -41,15 +41,18 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function checkForOpenReviews() {
-    getReviewListWithState('open').then(res => {
-        if (res.totalCount) {
-            vscode.window.showInformationMessage(
-                'There are open Upsource reviews for this project.'
-            );
+    getReviewListWithState('open').then(
+        res => {
+            if (res.totalCount) {
+                vscode.window.showInformationMessage(
+                    'There are open Upsource reviews for this project.'
+                );
+            }
+        },
+        err => {
+            console.log(err);
         }
-    }, (err) => {
-        console.log(err);
-    });
+    );
 }
 
 function createAndOpenConfigFileIfNotExists() {
@@ -118,17 +121,31 @@ function showReviewQuickPicks(state?: string) {
     });
 }
 
-function getReviewListWithState(state: string) {
-    return new Promise<ReviewListDTO>((resolve, reject) => {
-        let statusBarMessage = vscode.window.setStatusBarMessage('Fetching Reviews');
+function getReviewListWithState(state: string): Promise<ReviewListDTO> {
+    let params = {
+        limit: 99,
+        query: state ? 'state: ' + state : ''
+    };
+
+    return sendAPIRequest('getReviews', 'POST', params);
+}
+
+function sendAPIRequest(path: string, method: string, params: Object = {}): Promise<any> {
+    return new Promise<any>((resolve, reject) => {
+        let statusBarMessage = vscode.window.setStatusBarMessage(
+            'Contacting Upsource API...',
+            3000
+        );
 
         getConfig().then(
             (config: UpsConfig) => {
+                let body = { projectId: config.projectId };
+
                 request(
                     {
                         baseUrl: config.url + '/~rpc',
-                        uri: '/getReviews',
-                        method: 'POST',
+                        uri: '/' + path,
+                        method: method.toUpperCase(),
                         headers: {
                             Authorization:
                                 'Basic ' +
@@ -137,14 +154,10 @@ function getReviewListWithState(state: string) {
                                     )
                         },
                         json: true,
-                        body: {
-                            projectId: config.projectId,
-                            limit: 99,
-                            query: state ? 'state: ' + state : ''
-                        }
+                        body: Object.assign(body, params)
                     },
                     (err, response, body) => {
-                        if (err || response.statusCode != 200) {
+                        if (err || (response.statusCode != 200 && response.statusCode != 201)) {
                             vscode.window.showInformationMessage(
                                 'Upsource server is not reachable or responded with an error. Please check your upsource.json.'
                             );
@@ -153,7 +166,6 @@ function getReviewListWithState(state: string) {
                         }
 
                         statusBarMessage.dispose();
-
                         resolve(body.result);
                     }
                 );
