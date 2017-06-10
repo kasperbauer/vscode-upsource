@@ -5,24 +5,16 @@ import * as fs from 'fs';
 import * as request from 'request';
 import * as opn from 'opn';
 
-import { UpsConfig } from './models/UpsConfig';
+import Config from './Config';
 import { ReviewListDTO } from './models/ReviewListDTO';
-
-const rootPath = vscode.workspace.rootPath;
-const configFilePath = rootPath + '/upsource.json';
-const defaultSettings = `{
-    "url": "",
-    "login": "",
-    "password": "",
-    "projectId": ""
-}`;
+import { UpsConfig } from './models/UpsConfig';
 
 export function activate(context: vscode.ExtensionContext) {
     checkForOpenReviews();
 
     // create upsource.json config file with defaults
     let setup = vscode.commands.registerCommand('upsource.setup', () => {
-        createAndOpenConfigFileIfNotExists();
+        Config.setup();
     });
 
     // get open reviews and show a quick pick list
@@ -55,35 +47,6 @@ function checkForOpenReviews() {
     );
 }
 
-function createAndOpenConfigFileIfNotExists() {
-    fs.access(configFilePath, fs.constants.F_OK, err => {
-        if (!err) {
-            vscode.window.showInformationMessage('upsource.json already exists.');
-            showFileInTextEditor(configFilePath);
-            return;
-        }
-
-        fs.writeFile(configFilePath, defaultSettings, 'utf8', err => {
-            showFileInTextEditor(configFilePath);
-            vscode.window.showInformationMessage('upsource.json has been created successfully.');
-        });
-    });
-}
-
-function showFileInTextEditor(filePath): Promise<vscode.TextDocument> {
-    return new Promise<vscode.TextDocument>((resolve, reject) => {
-        vscode.workspace.openTextDocument(filePath).then(
-            (textDocument: vscode.TextDocument) => {
-                vscode.window.showTextDocument(textDocument);
-                resolve(textDocument);
-            },
-            err => {
-                reject(err);
-            }
-        );
-    });
-}
-
 function showReviewQuickPicks(state?: string) {
     getReviewListWithState(state).then(res => {
         let totalCount = res.totalCount,
@@ -107,7 +70,7 @@ function showReviewQuickPicks(state?: string) {
             vscode.window.showQuickPick(items).then(selectedItem => {
                 if (!selectedItem) return;
 
-                getConfig().then(config => {
+                Config.get().then((config: UpsConfig) => {
                     let url =
                         config.url +
                         '/' +
@@ -137,7 +100,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
             3000
         );
 
-        getConfig().then(
+        Config.get().then(
             (config: UpsConfig) => {
                 let body = { projectId: config.projectId };
 
@@ -175,23 +138,6 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                 reject(err);
             }
         );
-    });
-}
-
-function getConfig(): Promise<UpsConfig> {
-    return new Promise<UpsConfig>((resolve, reject) => {
-        fs.access(configFilePath, fs.constants.R_OK, err => {
-            if (err) {
-                vscode.window.showInformationMessage('upsource.json is not readable.');
-                reject(err);
-                return;
-            }
-
-            fs.readFile(configFilePath, 'utf8', function(err, data) {
-                if (err) reject(err);
-                else resolve(<UpsConfig>JSON.parse(data));
-            });
-        });
     });
 }
 
