@@ -33,7 +33,9 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                     },
                     (err, response, body) => {
                         if (err || (response.statusCode != 200 && response.statusCode != 201)) {
-                            vscode.window.showInformationMessage(
+                            console.log(err, response);
+                            
+                            vscode.window.showErrorMessage(
                                 'Upsource server is not reachable or responded with an error. Please check your upsource.json.'
                             );
                             reject(err);
