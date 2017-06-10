@@ -43,7 +43,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                         }
 
                         statusBarMessage.dispose();
-                        resolve(body.result);
+                        resolve(body);
                     }
                 );
             },
@@ -56,12 +56,20 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
 }
 
 function getReviewListWithState(state: string): Promise<ReviewListDTO> {
-    let params = {
-        limit: 99,
-        query: state ? 'state: ' + state : ''
-    };
+    return new Promise<ReviewListDTO>((resolve, reject) => {    
+        let params = {
+            limit: 99,
+            query: state ? 'state: ' + state : ''
+        };
 
-    return sendAPIRequest('getReviews', 'POST', params);
+        sendAPIRequest('getReviews', 'POST', params).then((res) =>{
+            resolve(res.result)
+        }, (err) => {
+            reject(err);
+        }); ;
+    });
+}
+
 }
 
 export default {
