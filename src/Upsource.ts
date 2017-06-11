@@ -79,8 +79,6 @@ function createReview(
     revisions: string[] = null
 ): Promise<ReviewDescriptorDTO> {
     return new Promise<ReviewDescriptorDTO>((resolve, reject) => {
-        console.log(branch, revisions);
-        
         if (!branch && !revisions) {
             reject();
             return;
@@ -90,14 +88,12 @@ function createReview(
         if (branch) params = Object.assign(params, { branch });
         if (revisions) params = Object.assign(params, { revisions });
 
-        // TODO: error handling
         sendAPIRequest('createReview', 'POST', params).then(
             res => {
-                console.log(res);
-                resolve(res);
+                resolve(res.result);
             },
             err => {
-                console.log(err);
+                console.log('ERROR', err);
                 reject(err);
             }
         );

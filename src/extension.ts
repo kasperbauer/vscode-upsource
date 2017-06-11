@@ -50,19 +50,12 @@ export function activate(context: vscode.ExtensionContext) {
             if (!selectedItem) return;
 
             Upsource.createReview(selectedItem.branch, selectedItem.revisions).then((review) => {
-                if (!review) {
-                    vscode.window.showErrorMessage(
-                        'Review could not be created.'
-                    );
-                    return;
-                }
-                
+                if (!review) return;
+
+                console.log(review);
+                                
                 vscode.window.showInformationMessage(
-                    'Review \'' + review.title + '\' successfully created.'
-                );
-            }, (err) => {
-                vscode.window.showErrorMessage(
-                    'Review could not be created.'
+                    'Review \'' + review.reviewId.reviewId + '\' successfully created.'
                 );
             });
         });
