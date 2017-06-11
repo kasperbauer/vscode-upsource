@@ -66,7 +66,7 @@ function checkForOpenReviews(): void {
     );
 }
 
-function showReviewQuickPicks(state?: string): void {
+function showReviewQuickPicks(state?: string, callback?: Function): void {
     Upsource.getReviewListWithState(state).then(res => {
         let totalCount = res.totalCount,
             reviews = res.reviews;
@@ -89,15 +89,19 @@ function showReviewQuickPicks(state?: string): void {
             vscode.window.showQuickPick(items).then(selectedItem => {
                 if (!selectedItem) return;
 
-                Config.get().then((config: UpsConfig) => {
-                    let url =
-                        config.url +
-                        '/' +
-                        config.projectId +
-                        '/review/' +
-                        selectedItem.review.reviewId.reviewId;
-                    opn(url);
-                });
+                if (callback) callback(selectedItem);
+                else {
+                    Config.get().then((config: UpsConfig) => {
+                        let url =
+                            config.url +
+                            '/' +
+                            config.projectId +
+                            '/review/' +
+                            selectedItem.review.reviewId.reviewId;
+
+                        opn(url);
+                    });
+                }
             });
         }
     });
