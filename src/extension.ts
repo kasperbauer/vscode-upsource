@@ -1,3 +1,14 @@
+/*
+* TODO:
+* - get last revision via getRevisionsList / findCommits
+* - get git branches via getBranches
+* - search for revision via getRevisionsListFiltered
+* - filter reviews (my reviews,...)
+* - add revision to review via addRevisionToReview
+* - browse all projects
+* - close review
+*/
+
 'use strict';
 
 import * as vscode from 'vscode';
