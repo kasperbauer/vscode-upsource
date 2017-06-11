@@ -33,12 +33,15 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                         body: Object.assign(body, params)
                     },
                     (err, response, body) => {
-                        if (err || (response.statusCode != 200 && response.statusCode != 201)) {
-                            console.log(err, response);
+                        if (typeof body.error != 'undefined') err = body.error;
+
+                        if (err) {
+                            console.log('ERROR', err);
                             
-                            vscode.window.showErrorMessage(
-                                'Upsource server is not reachable or responded with an error. Please check your upsource.json.'
-                            );
+                            if (err) {
+                                vscode.window.showErrorMessage(err.message + ' (' + err.code + ')');
+                            }
+
                             reject(err);
                             return;
                         }
