@@ -13,6 +13,9 @@ Shows a list of all open reviews in your project
 - All Reviews  
 Shows a list of all reviews in your project
 
+- Create Review
+Create a review based on your current branch or your last commit.
+
 ## Known Issues
 
 Please use the github issue tracker for any encountered problems.
