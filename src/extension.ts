@@ -31,34 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // create review from current branch / revision
     let createReview = vscode.commands.registerCommand('upsource.createReview', () => {
-        let items = [
-            {
-                label: 'For current branch',
-                description: git.branch(rootPath),
-                branch: git.branch(rootPath),
-                revisions: null
-            },
-            {
-                label: 'For most recent commit',
-                description: git.short(rootPath),
-                branch: null,
-                revisions: [ git.long(rootPath) ]
-            }
-        ];
-
-        vscode.window.showQuickPick(items).then(selectedItem => {
-            if (!selectedItem) return;
-
-            Upsource.createReview(selectedItem.branch, selectedItem.revisions).then((review) => {
-                if (!review) return;
-
-                console.log(review);
-                                
-                vscode.window.showInformationMessage(
-                    'Review \'' + review.reviewId.reviewId + '\' successfully created.'
-                );
-            });
-        });
+        showCreateReviewQuickPicks();
     });
 
     context.subscriptions.push(setup);
@@ -119,6 +92,33 @@ function showReviewQuickPicks(state?: string): void {
     });
 }
 
-function createReview(): void {}
+function showCreateReviewQuickPicks(): void {
+    let items = [
+        {
+            label: 'For current branch',
+            description: git.branch(rootPath),
+            branch: git.branch(rootPath),
+            revisions: null
+        },
+        {
+            label: 'For most recent commit',
+            description: git.short(rootPath),
+            branch: null,
+            revisions: [git.long(rootPath)]
+        }
+    ];
+
+    vscode.window.showQuickPick(items).then(selectedItem => {
+        if (!selectedItem) return;
+
+        Upsource.createReview(selectedItem.branch, selectedItem.revisions).then(review => {
+            if (!review) return;
+
+            vscode.window.showInformationMessage(
+                "Review '" + review.reviewId.reviewId + "' successfully created."
+            );
+        });
+    });
+}
 
 export function deactivate() {}
