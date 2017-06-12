@@ -1,5 +1,6 @@
 /*
 * TODO:
+* - open reviews: filter 'ready to close'
 * - get last revision via getRevisionsList / findCommits
 * - get git branches via getBranches
 * - search for revision via getRevisionsListFiltered
