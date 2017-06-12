@@ -1,6 +1,7 @@
 /*
 * TODO:
-* - open reviews: filter 'ready to close'
+* - open reviews: filter / tag 'ready to close'
+* - check for reviews: filter 'created-by: me'
 * - get last revision via getRevisionsList / findCommits
 * - get git branches via getBranches
 * - search for revision via getRevisionsListFiltered
