@@ -12,7 +12,7 @@
   ],
   "activationEvents": [
     "onCommand:upsource.setup",
-    "onCommand:upsource.getReviews",
+    "onCommand:upsource.openReviews",
     "onCommand:upsource.myOpenReviews",
     "onCommand:upsource.allReviews",
     "onCommand:upsource.createReview",
