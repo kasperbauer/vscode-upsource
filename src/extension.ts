@@ -5,7 +5,6 @@
 * - get last revision via getRevisionsList / findCommits
 * - get git branches via getBranches
 * - search for revision via getRevisionsListFiltered
-* - filter reviews (my reviews,...)
 * - add revision to review via addRevisionToReview
 * - browse all projects
 * - close review
@@ -37,6 +36,11 @@ export function activate(context: vscode.ExtensionContext) {
         showReviewQuickPicks('open');
     });
 
+    // get my open reviews and show a quick pick list
+    let myOpenReviews = vscode.commands.registerCommand('upsource.myOpenReviews', () => {
+        showReviewQuickPicks('open and #my');
+    });
+
     // get all reviews and show a quick pick list
     let allReviews = vscode.commands.registerCommand('upsource.allReviews', () => {
         showReviewQuickPicks();
@@ -49,6 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(setup);
     context.subscriptions.push(openReviews);
+    context.subscriptions.push(myOpenReviews);
     context.subscriptions.push(allReviews);
     context.subscriptions.push(createReview);
 }
