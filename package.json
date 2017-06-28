@@ -13,7 +13,6 @@
   "activationEvents": [
     "onCommand:upsource.setup",
     "onCommand:upsource.openReviews",
-    "onCommand:upsource.myOpenReviews",
     "onCommand:upsource.allReviews",
     "onCommand:upsource.createReview",
     "workspaceContains:upsource.json"
@@ -24,10 +23,6 @@
       {
         "command": "upsource.setup",
         "title": "Upsource: Setup"
-      },
-      {
-        "command": "upsource.myOpenReviews",
-        "title": "Upsource: My Open Reviews"
       },
       {
         "command": "upsource.openReviews",

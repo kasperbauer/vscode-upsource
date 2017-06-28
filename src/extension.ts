@@ -1,7 +1,5 @@
 /*
 * TODO:
-* - open reviews: filter / tag 'ready to close'
-* - check for reviews: filter 'created-by: me'
 * - get last revision via getRevisionsList / findCommits
 * - get git branches via getBranches
 * - search for revision via getRevisionsListFiltered
@@ -33,12 +31,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // get open reviews and show a quick pick list
     let openReviews = vscode.commands.registerCommand('upsource.openReviews', () => {
-        showReviewQuickPicks('state: open');
-    });
-
-    // get my open reviews and show a quick pick list
-    let myOpenReviews = vscode.commands.registerCommand('upsource.myOpenReviews', () => {
-        showReviewQuickPicks('state: open and #my');
+        showOpenReviewOptions();
     });
 
     // get all reviews and show a quick pick list
@@ -53,7 +46,6 @@ export function activate(context: vscode.ExtensionContext) {
 
     context.subscriptions.push(setup);
     context.subscriptions.push(openReviews);
-    context.subscriptions.push(myOpenReviews);
     context.subscriptions.push(allReviews);
     context.subscriptions.push(createReview);
 }
@@ -73,12 +65,59 @@ function checkForOpenReviews(): void {
     );
 }
 
-function showReviewQuickPicks(filter?: string, callback?: Function): void {
-    Upsource.getReviewList(filter).then(res => {
+function showOpenReviewOptions(): void {
+    let items: any[] = [
+        {
+            label: 'All',
+            description: 'All open reviews',
+            detail: '',
+            query: 'state: open'
+        },
+        {
+            label: 'Created',
+            description: 'Open reviews where you participate as an author',
+            detail: '',
+            query: 'state: open and author: me'
+        },
+        {
+            label: 'Assigned',
+            description: 'Pending open reviews where you participate as a reviewer',
+            detail: '',
+            query: 'state: open and reviewer: me and not completed(by: me)'
+        },
+        {
+            label: 'Has concern',
+            description:
+                'Open reviews where you participate as an author, containing rejected changes',
+            detail: '',
+            query: 'state: open and author: me and completed(with: {has concern})'
+        },
+        {
+            label: 'Mentioned',
+            description: 'state: open and #my',
+            detail: '',
+            query: 'state: open'
+        },
+        {
+            label: 'Completed',
+            description: '#{ready to close} and author: me',
+            detail: '',
+            query: 'state: open'
+        }
+    ];
+
+    vscode.window.showQuickPick(items).then(selectedItem => {
+        if (!selectedItem) return;
+        showReviewQuickPicks(selectedItem.query);
+    });
+}
+
+function showReviewQuickPicks(query?: string, callback?: Function): void {
+    Upsource.getReviewList(query).then(res => {
         let totalCount = res.totalCount,
             reviews = res.reviews;
 
-        if (!totalCount) vscode.window.showInformationMessage('No reviews.');
+        if (!totalCount) vscode.window.showInformationMessage('No reviews');
         else {
             let items = reviews.map(review => {
                 let label = review.reviewId.reviewId;
