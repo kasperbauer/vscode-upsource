@@ -59,11 +59,11 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
     });
 }
 
-function getReviewListWithState(state: string): Promise<ReviewListDTO> {
+function getReviewList(query?: string): Promise<ReviewListDTO> {
     return new Promise<ReviewListDTO>((resolve, reject) => {    
         let params = {
             limit: 99,
-            query: state ? 'state: ' + state : ''
+            query: query || ''
         };
 
         sendAPIRequest('getReviews', 'POST', params).then((res) =>{
@@ -101,6 +101,6 @@ function createReview(
 }
 
 export default {
-    getReviewListWithState,
+    getReviewList,
     createReview
 };

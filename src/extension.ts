@@ -33,12 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     // get open reviews and show a quick pick list
     let openReviews = vscode.commands.registerCommand('upsource.openReviews', () => {
-        showReviewQuickPicks('open');
+        showReviewQuickPicks('state: open');
     });
 
     // get my open reviews and show a quick pick list
     let myOpenReviews = vscode.commands.registerCommand('upsource.myOpenReviews', () => {
-        showReviewQuickPicks('open and #my');
+        showReviewQuickPicks('state: open and #my');
     });
 
     // get all reviews and show a quick pick list
@@ -59,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function checkForOpenReviews(): void {
-    Upsource.getReviewListWithState('open').then(
+    Upsource.getReviewList('state: open').then(
         res => {
             if (res.totalCount) {
                 vscode.window.showInformationMessage(
@@ -73,12 +73,12 @@ function checkForOpenReviews(): void {
     );
 }
 
-function showReviewQuickPicks(state?: string, callback?: Function): void {
-    Upsource.getReviewListWithState(state).then(res => {
+function showReviewQuickPicks(filter?: string, callback?: Function): void {
+    Upsource.getReviewList(filter).then(res => {
         let totalCount = res.totalCount,
             reviews = res.reviews;
 
-        if (!totalCount) vscode.window.showInformationMessage('No ' + (state || '') + ' reviews.');
+        if (!totalCount) vscode.window.showInformationMessage('No reviews.');
         else {
             let items = reviews.map(review => {
                 let label = review.reviewId.reviewId;
