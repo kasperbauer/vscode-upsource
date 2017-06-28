@@ -10,6 +10,9 @@ Generates an upsource.json file for use with this extension.
 - Open Reviews  
 Shows a list of all open reviews in your project
 
+- My Open Reviews  
+Shows a list of my open reviews in your project
+
 - All Reviews  
 Shows a list of all reviews in your project
 
