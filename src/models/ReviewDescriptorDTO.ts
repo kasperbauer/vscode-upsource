@@ -12,7 +12,7 @@ export class ReviewDescriptorDTO {
         // public issue: IssueIdDTO[],
         public updatedAt: number,
         public isUnread?: boolean,
-        public isReadToClose?: boolean,
+        public isReadyToClose?: boolean,
         public isRemoved?: boolean,
         // public completionRate?: CompletionRateDTO,
         public discussionCounter?: SimpleDiscussionCounterDTO
