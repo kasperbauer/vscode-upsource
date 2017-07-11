@@ -44,13 +44,21 @@ function setup() {
         settings = defaultSettings;
 
     vscode.window.showInputBox(steps[0]).then(input => {
-        if (input) settings.url = input;
+        if (typeof input == 'undefined') return;
+        settings.url = input;
+        
         vscode.window.showInputBox(steps[1]).then(input => {
-            if (input) settings.login = input;
+            if (typeof input == 'undefined') return;
+            settings.login = input;
+            
             vscode.window.showInputBox(steps[2]).then(input => {
-                if (input) settings.password = input;
+                if (typeof input == 'undefined') return;
+                settings.password = input;
+                
                 vscode.window.showInputBox(steps[3]).then(input => {
-                    if (input) settings.projectId = input;
+                    if (typeof input == 'undefined') return;
+                    settings.projectId = input;
+                    
 
                     createAndOpenConfigFileIfNotExists(settings);
                 });
