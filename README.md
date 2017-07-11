@@ -14,7 +14,10 @@ Shows a list of all open reviews in your project, filtered by common queries.
 Shows a list of all reviews in your project
 
 - Create Review
-Create a review based on your current branch or your last commit.
+Create a review based on a branch or your last commit.
+
+- Close Review
+Close all reviews that are ready to close.
 
 ## Known Issues
 
