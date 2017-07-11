@@ -32,8 +32,8 @@ Example:
 ```json
 "upsource.customQueries": [
     {
-        "label": "Concern raised",
-        "description": "Reviews that have concern raised",
+        "label": "Raised concern",
+        "description": "Reviews that have raised concern",
         "query": "#{has concern}"
     }
 ]
