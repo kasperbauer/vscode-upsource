@@ -6,11 +6,14 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.3.0] 2017-07-11
 ### Added
+- unified reviews list
 - custom queries
-- new setting: `upsource.customQueries`
 - autofill of default config values for faster setup
-- new setting: `upsource.defaultConfig`
 - show author name in review list
+- new setting: `upsource.customQueries`
+- new setting: `upsource.defaultConfig`
+### Removed
+- all reviews / open reviews in favor of unified list
 ### Fixed
 - abort the setup process completely when cancelling input
 
