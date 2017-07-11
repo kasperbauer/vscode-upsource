@@ -86,38 +86,32 @@ function showOpenReviewOptions(): void {
         {
             label: 'All',
             description: 'All open reviews',
-            detail: '',
             query: 'state: open'
         },
         {
             label: 'Created',
             description: 'Open reviews where you participate as an author',
-            detail: '',
             query: 'state: open and author: me'
         },
         {
             label: 'Assigned',
             description: 'Pending open reviews where you participate as a reviewer',
-            detail: '',
             query: 'state: open and reviewer: me and not completed(by: me)'
         },
         {
             label: 'Has concern',
             description:
                 'Open reviews where you participate as an author, containing rejected changes',
-            detail: '',
             query: 'state: open and author: me and completed(with: {has concern})'
         },
         {
             label: 'Mentioned',
             description: 'Open reviews where you participate in any role',
-            detail: '',
             query: 'state: open and #my'
         },
         {
             label: 'Completed',
             description: 'Reviews that can be closed',
-            detail: '',
             query: '#{ready to close} and author: me'
         }
     ];
