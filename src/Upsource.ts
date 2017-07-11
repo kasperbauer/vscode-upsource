@@ -1,3 +1,4 @@
+import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import * as vscode from 'vscode';
 import * as request from 'request';
 
@@ -148,9 +149,24 @@ function closeReview(reviewId: ReviewIdDTO): Promise<any> {
     });
 }
 
+function getUsers(pattern: string = ''): Promise<FullUserInfoDTO[]> {
+    let params = {
+        pattern: pattern || '',
+        limit: 99
+    };
+
+    return new Promise<FullUserInfoDTO[]>((resolve, reject) => {
+        sendAPIRequest('findUsers', 'POST', params).then(
+            res => resolve(res.result.infos),
+            err => reject(err)
+        );
+    });
+}
+
 export default {
     getReviewList,
     getBranches,
+    getUsers,
     createReview,
     closeReview
 };

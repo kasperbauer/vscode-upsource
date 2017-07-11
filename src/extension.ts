@@ -16,15 +16,18 @@ import * as git from 'git-rev-sync';
 
 import Config from './Config';
 import Upsource from './Upsource';
+import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewIdDTO } from './models/ReviewIdDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
 import { UpsConfig } from './models/UpsConfig';
 
 const rootPath = vscode.workspace.rootPath;
+let _users: FullUserInfoDTO[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
-    // show open reviews info message
+    getUsers();
+
     let checkForOpenReviewsOnLaunch = vscode.workspace.getConfiguration().get('upsource.checkForOpenReviewsOnLaunch');
     if (checkForOpenReviewsOnLaunch) checkForOpenReviews();
 
@@ -41,6 +44,12 @@ export function activate(context: vscode.ExtensionContext) {
         let subscription = vscode.commands.registerCommand(`upsource.${command.name}`, () => command.callback());
         context.subscriptions.push(subscription);
     })
+}
+
+function getUsers() {
+    Upsource.getUsers().then(users => {
+        _users = users;
+    });
 }
 
 function checkForOpenReviews(): void {    
@@ -121,13 +130,17 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
         if (!totalCount) vscode.window.showInformationMessage('No reviews');
         else {
             let items = reviews.map(review => {
+                let authorId = review.participants.find(participant => participant.role == 1).userId,
+                    author = _users.find(user => user.userId == authorId);
+
                 let label = review.reviewId.reviewId;
                 if (review.isUnread) label += ' *';
 
                 let description = review.title;
-
+       
                 let detail = review.state == 1 ? '️⚠️ open' : '🔒 closed';
                 if (review.isReadyToClose) detail = '✅ ready to close';
+                detail += ', ' + author.name,
                 detail += ', ' + review.participants.length + ' participants';
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
 
