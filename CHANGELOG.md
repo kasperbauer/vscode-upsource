@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - new setting: `upsource.customQueries`
 - autofill of default config values for faster setup
 - new setting: `upsource.defaultConfig`
+- show author name in review list
 ### Fixed
 - abort the setup process completely when cancelling input
 
