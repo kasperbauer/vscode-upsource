@@ -47,6 +47,7 @@
         "onCommand:upsource.setup",
         "onCommand:upsource.openReviews",
         "onCommand:upsource.allReviews",
+        "onCommand:upsource.customQueries",
         "onCommand:upsource.createReview",
         "onCommand:upsource.closeReview",
         "workspaceContains:upsource.json"
@@ -67,6 +68,10 @@
                 "title": "Upsource: Show All Reviews"
             },
             {
+                "command": "upsource.customQueries",
+                "title": "Upsource: Show Custom Queries"
+            },
+            {
                 "command": "upsource.createReview",
                 "title": "Upsource: Create Review"
             },
@@ -83,6 +88,11 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Checks for open reviews on launch, if upsource.json is present"
+                },
+                "upsource.customQueries": {
+                    "type": "array",
+                    "default": [],
+                    "description": "Adds custom queries to the extension. [{ label: string, description: string, query: string }]"
                 }
             }
         }

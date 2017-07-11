@@ -46,6 +46,11 @@ export function activate(context: vscode.ExtensionContext) {
         showCreateReviewQuickPicks();
     });
 
+    // create review from current branch / revision
+    let customQueries = vscode.commands.registerCommand('upsource.customQueries', () => {
+        showCustomQueries();
+    });
+
     // close review
     let closeReview = vscode.commands.registerCommand('upsource.closeReview', () => {
         showCloseReviewQuickPicks();
@@ -54,6 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(setup);
     context.subscriptions.push(openReviews);
     context.subscriptions.push(allReviews);
+    context.subscriptions.push(customQueries);
     context.subscriptions.push(createReview);
     context.subscriptions.push(closeReview);
 }
@@ -113,6 +119,19 @@ function showOpenReviewOptions(): void {
             query: '#{ready to close} and author: me'
         }
     ];
+
+    vscode.window.showQuickPick(items).then(selectedItem => {
+        if (!selectedItem) return;
+        showReviewQuickPicks(selectedItem.query);
+    });
+}
+
+function showCustomQueries() {
+    let items = <any[]> vscode.workspace.getConfiguration().get('upsource.customQueries');
+    
+    if (!items.length) {
+        vscode.window.showInformationMessage('No custom queries defined. Add custom queries in the user settings.');
+    }
 
     vscode.window.showQuickPick(items).then(selectedItem => {
         if (!selectedItem) return;
