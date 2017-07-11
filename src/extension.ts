@@ -4,7 +4,7 @@
 * - search for revision via [UPS] getRevisionsListFiltered
 * - add revision to review via [UPS] addRevisionToReview
 * - browse all projects
-* - close / delete / rename review
+* - delete / rename review
 * - ask for credentials on setup
 * - settings: look for open reviews on startup (boolean)
 */
