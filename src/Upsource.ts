@@ -1,3 +1,5 @@
+import { RevisionDescriptorListDTO } from './models/RevisionDescriptorListDTO';
+import { BranchListDTO } from './models/BranchListDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import * as vscode from 'vscode';
 import * as request from 'request';
@@ -15,7 +17,10 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
 
         Config.get().then(
             (config: UpsConfig) => {
-                let body = { projectId: config.projectId };
+                let body = Object.assign({ projectId: config.projectId }, params);
+
+                console.log('SENDING REQUEST');
+                console.log(body);
 
                 request(
                     {
@@ -30,7 +35,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                                     )
                         },
                         json: true,
-                        body: Object.assign(body, params)
+                        body
                     },
                     (err, response, body) => {
                         if (typeof body.error != 'undefined') err = body.error;
