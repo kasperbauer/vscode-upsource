@@ -1,11 +1,12 @@
-import { RevisionDescriptorListDTO } from './models/RevisionDescriptorListDTO';
-import { BranchListDTO } from './models/BranchListDTO';
-import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import * as vscode from 'vscode';
 import * as request from 'request';
 
 import Config from './Config';
+import { BranchListDTO } from './models/BranchListDTO';
+import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
+import { ReviewIdDTO } from './models/ReviewIdDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
+import { RevisionDescriptorListDTO } from './models/RevisionDescriptorListDTO';
 import { UpsConfig } from './models/UpsConfig';
 
 function sendAPIRequest(path: string, method: string, params: Object = {}): Promise<any> {
@@ -30,9 +31,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                         headers: {
                             Authorization:
                                 'Basic ' +
-                                    new Buffer(config.login + ':' + config.password).toString(
-                                        'base64'
-                                    )
+                                new Buffer(config.login + ':' + config.password).toString('base64')
                         },
                         json: true,
                         body
@@ -42,7 +41,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
 
                         if (err) {
                             console.log('ERROR', err);
-                            
+
                             if (err) {
                                 vscode.window.showErrorMessage(err.message + ' (' + err.code + ')');
                             }
@@ -53,7 +52,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
 
                         console.log('RESPONSE');
                         console.log(body);
-                        
+
                         statusBarMessage.dispose();
                         resolve(body);
                     }
@@ -68,17 +67,20 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
 }
 
 function getReviewList(query?: string): Promise<ReviewListDTO> {
-    return new Promise<ReviewListDTO>((resolve, reject) => {    
+    return new Promise<ReviewListDTO>((resolve, reject) => {
         let params = {
             limit: 99,
             query: query || ''
         };
 
-        sendAPIRequest('getReviews', 'POST', params).then((res) =>{
-            resolve(res.result)
-        }, (err) => {
-            reject(err);
-        }); ;
+        sendAPIRequest('getReviews', 'POST', params).then(
+            res => {
+                resolve(res.result);
+            },
+            err => {
+                reject(err);
+            }
+        );
     });
 }
 
@@ -114,17 +116,39 @@ function getBranches(): Promise<BranchListDTO> {
         query: ''
     };
 
-    return new Promise<BranchListDTO>((resolve, reject) => {    
-        sendAPIRequest('getBranches', 'POST', params).then((res) =>{
-            resolve(res.result)
-        }, (err) => {
-            reject(err);
-        }); ;
+    return new Promise<BranchListDTO>((resolve, reject) => {
+        sendAPIRequest('getBranches', 'POST', params).then(
+            res => {
+                resolve(res.result);
+            },
+            err => {
+                reject(err);
+            }
+        );
+    });
+}
+
+function closeReview(reviewId: ReviewIdDTO): Promise<any> {
+    let params = {
+        reviewId,
+        isFlagged: true
+    };
+    
+    return new Promise<any>((resolve, reject) => {
+        sendAPIRequest('closeReview', 'POST', params).then(
+            res => {
+                resolve(res.result);
+            },
+            err => {
+                reject(err);
+            }
+        );
     });
 }
 
 export default {
     getReviewList,
     getBranches,
-    createReview
+    createReview,
+    closeReview
 };

@@ -17,6 +17,8 @@ import * as git from 'git-rev-sync';
 
 import Config from './Config';
 import Upsource from './Upsource';
+import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
+import { ReviewIdDTO } from './models/ReviewIdDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
 import { UpsConfig } from './models/UpsConfig';
 
@@ -143,7 +145,7 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
             vscode.window.showQuickPick(items).then(selectedItem => {
                 if (!selectedItem) return;
 
-                if (callback) callback(selectedItem);
+                if (callback) callback(selectedItem.review);
                 else {
                     Config.get().then((config: UpsConfig) => {
                         let url =
@@ -234,8 +236,12 @@ function createReview(branch = null, revisions = null): void {
     });
 }
 
-function closeReview(review) {
-    console.log('REVIEW SELECTED', review);    
+function closeReview(review: ReviewDescriptorDTO) {
+    Upsource.closeReview(review.reviewId).then(() => {
+        vscode.window.showInformationMessage(
+            "Review '" + review.reviewId.reviewId + "' successfully closed."
+        );
+    });
 }
 
 export function deactivate() {}
