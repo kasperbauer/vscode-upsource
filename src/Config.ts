@@ -75,8 +75,8 @@ function setup() {
     });
 }
 
-function createAndOpenConfigFileIfNotExists(settings?: UpsConfig) {
-    let contents = JSON.stringify(settings || defaultSettings);
+function createAndOpenConfigFileIfNotExists(settings: UpsConfig = new UpsConfig()) {
+    let contents = JSON.stringify(settings);
 
     fs.access(configFilePath, fs.constants.F_OK, err => {
         if (!err) {
@@ -85,7 +85,7 @@ function createAndOpenConfigFileIfNotExists(settings?: UpsConfig) {
             return;
         }
 
-        fs.writeFile(configFilePath, contents, 'utf8', err => {
+        fs.writeFile(configFilePath, contents, { encoding: 'utf8' }, err => {
             showFileInTextEditor(configFilePath);
             vscode.window.showInformationMessage('upsource.json has been created successfully.');
         });
