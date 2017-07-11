@@ -1,11 +1,12 @@
 /*
 * TODO:
-* - get last revision via getRevisionsList / findCommits
-* - get git branches via getBranches
-* - search for revision via getRevisionsListFiltered
-* - add revision to review via addRevisionToReview
+* - add
+* - select revision via [UPS] getRevisionsList / [UPS] findCommits
+* - get all git branches via [UPS] getBranches
+* - search for revision via [UPS] getRevisionsListFiltered
+* - add revision to review via [UPS] addRevisionToReview
 * - browse all projects
-* - close review
+* - close / delete review
 */
 
 'use strict';
