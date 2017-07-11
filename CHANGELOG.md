@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - all reviews / open reviews in favor of unified list
 ### Fixed
 - abort the setup process completely when cancelling input
+- prevent error if project is not a git repo
 
 ## [1.2.0] 2017-07-11
 ### Added
