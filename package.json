@@ -93,6 +93,11 @@
                     "type": "array",
                     "default": [],
                     "description": "Adds custom queries to the extension. [{ label: string, description: string, query: string }]"
+                },
+                "upsource.defaultConfig": {
+                    "type": "object",
+                    "default": {},
+                    "description": "Add your default config here for faster setup. { url: string, login: string, projectId: string }"
                 }
             }
         }

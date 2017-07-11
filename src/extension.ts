@@ -6,7 +6,6 @@
 * - browse all projects
 * - delete / rename review
 * - get / show user names
-* - add default settings (url, login)
 */
 
 'use strict';

@@ -5,12 +5,6 @@ import { UpsConfig } from './models/UpsConfig';
 
 const rootPath = vscode.workspace.rootPath;
 const configFilePath = rootPath + '/upsource.json';
-const defaultSettings: UpsConfig = {
-    url: '',
-    login: '',
-    password: '',
-    projectId: ''
-};
 
 function getConfig(): Promise<UpsConfig> {
     return new Promise<UpsConfig>((resolve, reject) => {
@@ -30,35 +24,49 @@ function getConfig(): Promise<UpsConfig> {
 }
 
 function setup() {
-    let question = 'Please enter your ',
+    let defaultConfig = <UpsConfig>vscode.workspace
+            .getConfiguration()
+            .get('upsource.defaultConfig'),
+        settings = new UpsConfig(defaultConfig.url, defaultConfig.login, defaultConfig.projectId),
+        question = 'Please enter your ',
         steps = [
-            { prompt: question + 'Upsource URL', placeHolder: 'URL', password: false },
             {
-                prompt: question + 'Login identifier',
-                placeHolder: 'Login identifier',
+                prompt: question + 'Upsource URL',
+                placeHolder: defaultConfig.url || 'URL',
                 password: false
             },
-            { prompt: question + 'Password', placeHolder: 'Password', password: true },
-            { prompt: question + 'Project ID', placeHolder: 'Project ID', password: false }
-        ],
-        settings = defaultSettings;
+            {
+                prompt: question + 'login identifier',
+                placeHolder: defaultConfig.login || 'login identifier',
+                password: false
+            },
+            {
+                prompt: question + 'password',
+                placeHolder: 'Password',
+                password: true
+            },
+            {
+                prompt: question + 'project ID',
+                placeHolder: defaultConfig.projectId || 'Project ID',
+                password: false
+            }
+        ];
 
     vscode.window.showInputBox(steps[0]).then(input => {
         if (typeof input == 'undefined') return;
-        settings.url = input;
-        
+        if (input) settings.url = input;
+
         vscode.window.showInputBox(steps[1]).then(input => {
             if (typeof input == 'undefined') return;
-            settings.login = input;
-            
+            if (input) settings.login = input;
+
             vscode.window.showInputBox(steps[2]).then(input => {
                 if (typeof input == 'undefined') return;
-                settings.password = input;
-                
+                if (input) settings.password = input;
+
                 vscode.window.showInputBox(steps[3]).then(input => {
                     if (typeof input == 'undefined') return;
-                    settings.projectId = input;
-                    
+                    if (input) settings.projectId = input;
 
                     createAndOpenConfigFileIfNotExists(settings);
                 });
