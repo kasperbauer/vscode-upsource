@@ -1,7 +1,7 @@
 {
     "name": "vscode-upsource",
     "displayName": "Upsource for VSCode",
-    "description": "List and create your Upsource Reviews in VSCode.",
+    "description": "Manage your Upsource Reviews in VSCode.",
     "version": "1.2.0",
     "publisher": "kasperbauer",
     "engines": {
