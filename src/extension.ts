@@ -45,10 +45,16 @@ export function activate(context: vscode.ExtensionContext) {
         showCreateReviewQuickPicks();
     });
 
+    // close review
+    let closeReview = vscode.commands.registerCommand('upsource.closeReview', () => {
+        showCloseReviewQuickPicks();
+    });
+
     context.subscriptions.push(setup);
     context.subscriptions.push(openReviews);
     context.subscriptions.push(allReviews);
     context.subscriptions.push(createReview);
+    context.subscriptions.push(closeReview);
 }
 
 function checkForOpenReviews(): void {
@@ -126,7 +132,8 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
 
                 let description = review.title;
 
-                let detail = review.state == 1 ? '️⚠️ open' : '✅ closed';
+                let detail = review.state == 1 ? '️⚠️ open' : '🔒 closed';
+                if (review.isReadyToClose) detail = '✅ ready to close';
                 detail += ', ' + review.participants.length + ' participants';
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
 
@@ -196,6 +203,10 @@ function showCreateReviewQuickPicks(): void {
     });
 }
 
+function showCloseReviewQuickPicks(): void {
+    showReviewQuickPicks('#{ready to close} and author: me', closeReview);
+}
+
 function showBranchesQuickPicks(): void {
     Upsource.getBranches().then(res => {
         let items = res.branch.map(branch => {
@@ -221,6 +232,10 @@ function createReview(branch = null, revisions = null): void {
             "Review '" + review.reviewId.reviewId + "' successfully created."
         );
     });
+}
+
+function closeReview(review) {
+    console.log('REVIEW SELECTED', review);    
 }
 
 export function deactivate() {}
