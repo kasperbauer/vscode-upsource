@@ -45,9 +45,7 @@
     ],
     "activationEvents": [
         "onCommand:upsource.setup",
-        "onCommand:upsource.openReviews",
-        "onCommand:upsource.allReviews",
-        "onCommand:upsource.customQueries",
+        "onCommand:upsource.showReviews",
         "onCommand:upsource.createReview",
         "onCommand:upsource.closeReview",
         "workspaceContains:upsource.json"
@@ -60,16 +58,8 @@
                 "title": "Upsource: Setup"
             },
             {
-                "command": "upsource.openReviews",
-                "title": "Upsource: Show Open Reviews"
-            },
-            {
-                "command": "upsource.allReviews",
-                "title": "Upsource: Show All Reviews"
-            },
-            {
-                "command": "upsource.customQueries",
-                "title": "Upsource: Show Custom Queries"
+                "command": "upsource.showReviews",
+                "title": "Upsource: Show Reviews"
             },
             {
                 "command": "upsource.createReview",

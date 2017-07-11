@@ -28,22 +28,24 @@ let _users: FullUserInfoDTO[] = [];
 export function activate(context: vscode.ExtensionContext) {
     getUsers();
 
-    let checkForOpenReviewsOnLaunch = vscode.workspace.getConfiguration().get('upsource.checkForOpenReviewsOnLaunch');
+    let checkForOpenReviewsOnLaunch = vscode.workspace
+        .getConfiguration()
+        .get('upsource.checkForOpenReviewsOnLaunch');
     if (checkForOpenReviewsOnLaunch) checkForOpenReviews();
 
     let commands = [
         { name: 'setup', callback: Config.setup },
-        { name: 'openReviews', callback: showOpenReviewOptions },
-        { name: 'allReviews', callback: showReviewQuickPicks },
+        { name: 'showReviews', callback: showReviews },
         { name: 'createReview', callback: showCreateReviewQuickPicks },
-        { name: 'customQueries', callback: showCustomQueries },
         { name: 'closeReview', callback: showCloseReviewQuickPicks }
     ];
 
     commands.forEach(command => {
-        let subscription = vscode.commands.registerCommand(`upsource.${command.name}`, () => command.callback());
+        let subscription = vscode.commands.registerCommand(`upsource.${command.name}`, () =>
+            command.callback()
+        );
         context.subscriptions.push(subscription);
-    })
+    });
 }
 
 function getUsers() {
@@ -52,7 +54,7 @@ function getUsers() {
     });
 }
 
-function checkForOpenReviews(): void {    
+function checkForOpenReviews(): void {
     Upsource.getReviewList('state: open').then(
         res => {
             if (res.totalCount) {
@@ -67,40 +69,48 @@ function checkForOpenReviews(): void {
     );
 }
 
-function showOpenReviewOptions(): void {
-    let items: any[] = [
-        {
-            label: 'All',
-            description: 'All open reviews',
-            query: 'state: open'
-        },
-        {
-            label: 'Created',
-            description: 'Open reviews where you participate as an author',
-            query: 'state: open and author: me'
-        },
-        {
-            label: 'Assigned',
-            description: 'Pending open reviews where you participate as a reviewer',
-            query: 'state: open and reviewer: me and not completed(by: me)'
-        },
-        {
-            label: 'Has concern',
-            description:
-                'Open reviews where you participate as an author, containing rejected changes',
-            query: 'state: open and author: me and completed(with: {has concern})'
-        },
-        {
-            label: 'Mentioned',
-            description: 'Open reviews where you participate in any role',
-            query: 'state: open and #my'
-        },
-        {
-            label: 'Completed',
-            description: 'Reviews that can be closed',
-            query: '#{ready to close} and author: me'
-        }
-    ];
+function showReviews(): void {
+    let customQueries = <any[]>vscode.workspace.getConfiguration().get('upsource.customQueries'),
+        items: any[] = [
+            {
+                label: 'All',
+                description: 'All open & closed reviews',
+                query: ''
+            },
+            {
+                label: 'Open',
+                description: 'Open reviews',
+                query: 'state: open'
+            },
+            {
+                label: 'Open: Created',
+                description: 'Open reviews where you participate as an author',
+                query: 'state: open and author: me'
+            },
+            {
+                label: 'Open: Assigned',
+                description: 'Pending open reviews where you participate as a reviewer',
+                query: 'state: open and reviewer: me and not completed(by: me)'
+            },
+            {
+                label: 'Open: Has concern',
+                description:
+                    'Open reviews where you participate as an author, containing rejected changes',
+                query: 'state: open and author: me and completed(with: {has concern})'
+            },
+            {
+                label: 'Open: Mentioned',
+                description: 'Open reviews where you participate in any role',
+                query: 'state: open and #my'
+            },
+            {
+                label: 'Open: Completed',
+                description: 'Reviews that can be closed',
+                query: '#{ready to close} and author: me'
+            }
+        ];
+
+    items = items.concat(customQueries);
 
     vscode.window.showQuickPick(items).then(selectedItem => {
         if (!selectedItem) return;
@@ -109,10 +119,12 @@ function showOpenReviewOptions(): void {
 }
 
 function showCustomQueries() {
-    let items = <any[]> vscode.workspace.getConfiguration().get('upsource.customQueries');
-    
+    let items = <any[]>vscode.workspace.getConfiguration().get('upsource.customQueries');
+
     if (!items.length) {
-        vscode.window.showInformationMessage('No custom queries defined. Add custom queries in the user settings.');
+        vscode.window.showInformationMessage(
+            'No custom queries defined. Add custom queries in the user settings.'
+        );
         return;
     }
 
@@ -130,18 +142,19 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
         if (!totalCount) vscode.window.showInformationMessage('No reviews');
         else {
             let items = reviews.map(review => {
-                let authorId = review.participants.find(participant => participant.role == 1).userId,
+                let authorId = review.participants.find(participant => participant.role == 1)
+                        .userId,
                     author = _users.find(user => user.userId == authorId);
 
                 let label = review.reviewId.reviewId;
                 if (review.isUnread) label += ' *';
 
                 let description = review.title;
-       
+
                 let detail = review.state == 1 ? '️⚠️ open' : '🔒 closed';
                 if (review.isReadyToClose) detail = '✅ ready to close';
-                detail += ', ' + author.name,
-                detail += ', ' + review.participants.length + ' participants';
+                (detail += ', ' + author.name), (detail +=
+                    ', ' + review.participants.length + ' participants');
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
 
                 return { label, description, detail, review };
@@ -189,13 +202,13 @@ function showCreateReviewQuickPicks(): void {
             description: 'Show branch list',
             branch: null,
             revisions: null,
-            action: 'getBranches'            
+            action: 'getBranches'
         }
     ];
 
     vscode.window.showQuickPick(items).then(selectedItem => {
         if (!selectedItem) return;
-        
+
         let action = selectedItem.action;
         if (action) {
             switch (action) {
@@ -220,15 +233,15 @@ function showBranchesQuickPicks(): void {
             return {
                 label: branch.name,
                 description: branch.lastRevision.revisionCommitMessage,
-                branch: branch.name,
+                branch: branch.name
             };
         });
 
         vscode.window.showQuickPick(items).then(selectedItem => {
-            if (!selectedItem) return;                
+            if (!selectedItem) return;
             createReview(selectedItem.branch);
         });
-    });    
+    });
 }
 
 function createReview(branch = null, revisions = null): void {
