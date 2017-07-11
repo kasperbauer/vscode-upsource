@@ -25,11 +25,11 @@
             },
             {
                 "command": "upsource.openReviews",
-                "title": "Upsource: Open Reviews"
+                "title": "Upsource: Show Open Reviews"
             },
             {
                 "command": "upsource.allReviews",
-                "title": "Upsource: All Reviews"
+                "title": "Upsource: Show All Reviews"
             },
             {
                 "command": "upsource.createReview",
