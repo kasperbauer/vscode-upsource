@@ -95,15 +95,15 @@ function showOpenReviewOptions(): void {
         },
         {
             label: 'Mentioned',
-            description: 'state: open and #my',
+            description: 'Open reviews where you participate in any role',
             detail: '',
-            query: 'state: open'
+            query: 'state: open and #my'
         },
         {
             label: 'Completed',
-            description: '#{ready to close} and author: me',
+            description: 'Reviews that can be closed',
             detail: '',
-            query: 'state: open'
+            query: '#{ready to close} and author: me'
         }
     ];
 
