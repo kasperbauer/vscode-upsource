@@ -127,6 +127,7 @@ function showCustomQueries() {
     
     if (!items.length) {
         vscode.window.showInformationMessage('No custom queries defined. Add custom queries in the user settings.');
+        return;
     }
 
     vscode.window.showQuickPick(items).then(selectedItem => {
