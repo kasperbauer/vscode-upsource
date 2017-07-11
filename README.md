@@ -25,7 +25,7 @@ Close all reviews that are ready to close.
 `upsource.checkForOpenReviewsOnLaunch`  
 Checks for open reviews on launch, if upsource.json is present
 
-`upsource.customQueries`
+`upsource.customQueries`  
 You're able to add custom queries to the extension. Every item in the array should have a label, description and query property. (For more information about queries, see the Upsource docs.)
 
 Example:
@@ -39,7 +39,7 @@ Example:
 ]
 ```
 
-`upsource.defaultConfig`
+`upsource.defaultConfig`  
 Add your default config values here for faster setup. Any values provided will be pre-filled
 in the setup dialog. Password is left out for security reasons.
 
