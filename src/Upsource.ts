@@ -100,7 +100,23 @@ function createReview(
     });
 }
 
+function getBranches(): Promise<BranchListDTO> {
+    let params = {
+        limit: 99,
+        query: ''
+    };
+
+    return new Promise<BranchListDTO>((resolve, reject) => {    
+        sendAPIRequest('getBranches', 'POST', params).then((res) =>{
+            resolve(res.result)
+        }, (err) => {
+            reject(err);
+        }); ;
+    });
+}
+
 export default {
     getReviewList,
+    getBranches,
     createReview
 };
