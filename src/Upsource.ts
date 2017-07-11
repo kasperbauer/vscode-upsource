@@ -37,7 +37,9 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                         body
                     },
                     (err, response, body) => {
-                        if (typeof body.error != 'undefined') err = body.error;
+                        if (typeof body != 'undefined' && typeof body.error != 'undefined') {
+                            err = body.error;
+                        }
 
                         if (err) {
                             console.log('ERROR', err);
@@ -133,7 +135,7 @@ function closeReview(reviewId: ReviewIdDTO): Promise<any> {
         reviewId,
         isFlagged: true
     };
-    
+
     return new Promise<any>((resolve, reject) => {
         sendAPIRequest('closeReview', 'POST', params).then(
             res => {
