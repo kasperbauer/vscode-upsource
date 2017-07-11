@@ -19,14 +19,13 @@ Create a review based on a branch or your last commit.
 - Close Review
 Close all reviews that are ready to close.
 
+## Settings
+
+`upsource.checkForOpenReviewsOnLaunch`  
+Checks for open reviews on launch, if upsource.json is present
+
 ## Known Issues
 
 Please use the github issue tracker for any encountered problems.
-
-## Release Notes
-
-### 1.0.0
-
-Initial release.
 
 **Enjoy!**
