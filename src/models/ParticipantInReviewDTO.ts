@@ -1,7 +1,9 @@
+import { RoleInReviewEnum, ParticipantStateEnum } from './Enums';
+
 export class ParticipantInReviewDTO {
     constructor(
         public userId: string,
-        public role: number,
-        public state: number,
+        public role: RoleInReviewEnum,
+        public state: ParticipantStateEnum,
     ) {}
 };

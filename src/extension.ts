@@ -21,6 +21,7 @@ import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewIdDTO } from './models/ReviewIdDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
+import { ReviewStateEnum, RoleInReviewEnum } from './models/Enums';
 import { UpsConfig } from './models/UpsConfig';
 
 const rootPath = vscode.workspace.rootPath;
@@ -143,8 +144,9 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
         if (!totalCount) vscode.window.showInformationMessage('No reviews');
         else {
             let items = reviews.map(review => {
-                let authorId = review.participants.find(participant => participant.role == 1)
-                        .userId,
+                let authorId = review.participants.find(
+                        participant => participant.role == RoleInReviewEnum.Author
+                    ).userId,
                     author = _users.find(user => user.userId == authorId);
 
                 let label = review.reviewId.reviewId;
@@ -152,7 +154,7 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
 
                 let description = review.title;
 
-                let detail = review.state == 1 ? '️⚠️ open' : '🔒 closed';
+                let detail = review.state == ReviewStateEnum.Open ? '️⚠️ open' : '🔒 closed';
                 if (review.isReadyToClose) detail = '✅ ready to close';
                 (detail += ', ' + author.name), (detail +=
                     ', ' + review.participants.length + ' participants');
