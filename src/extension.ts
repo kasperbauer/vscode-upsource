@@ -5,7 +5,6 @@
 * - add revision to review via [UPS] addRevisionToReview
 * - browse all projects
 * - delete / rename review
-* - ask for credentials on setup
 */
 
 'use strict';
