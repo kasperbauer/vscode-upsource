@@ -13,6 +13,7 @@
 import * as vscode from 'vscode';
 import * as opn from 'opn';
 import * as git from 'git-rev-sync';
+import * as fs from 'fs';
 
 import Config from './Config';
 import Upsource from './Upsource';
@@ -182,29 +183,37 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
 }
 
 function showCreateReviewQuickPicks(): void {
-    let items = [
-        {
-            label: 'For current branch',
-            description: git.branch(rootPath),
-            branch: git.branch(rootPath),
-            revisions: null,
-            action: null
-        },
-        {
-            label: 'For most recent commit',
-            description: git.short(rootPath),
-            branch: null,
-            revisions: [git.long(rootPath)],
-            action: null
-        },
-        {
-            label: 'For specific branch',
-            description: 'Show branch list',
-            branch: null,
-            revisions: null,
-            action: 'getBranches'
-        }
-    ];
+    let isGit = fs.existsSync(rootPath + '/.git'),
+        items = [
+            {
+                label: 'For specific branch',
+                description: 'Show branch list',
+                branch: null,
+                revisions: null,
+                action: 'getBranches'
+            }
+        ];
+
+    if (isGit) {
+        let gitItems = [
+            {
+                label: 'For current branch',
+                description: git.branch(rootPath),
+                branch: git.branch(rootPath),
+                revisions: null,
+                action: null
+            },
+            {
+                label: 'For most recent commit',
+                description: git.short(rootPath),
+                branch: null,
+                revisions: [git.long(rootPath)],
+                action: null
+            }
+        ];
+
+        items = gitItems.concat(items);
+    }
 
     vscode.window.showQuickPick(items).then(selectedItem => {
         if (!selectedItem) return;
