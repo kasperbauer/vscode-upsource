@@ -51,6 +51,9 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                             return;
                         }
 
+                        console.log('RESPONSE');
+                        console.log(body);
+                        
                         statusBarMessage.dispose();
                         resolve(body);
                     }
