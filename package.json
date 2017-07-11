@@ -3,11 +3,43 @@
     "displayName": "Upsource for VSCode",
     "description": "Manage your Upsource Reviews in VSCode.",
     "version": "1.2.0",
+    "preview": true,
+    "icon": "icon.png",
     "publisher": "kasperbauer",
+    "keywords": ["upsource", "code review", "review", "reviews", "jetbrains"],
     "engines": {
         "vscode": "^1.12.0"
     },
     "categories": ["Other"],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kasperbauer/vscode-upsource.git"
+    },
+    "bugs": {
+        "url": "https://github.com/kasperbauer/vscode-upsource/issues"
+    },
+    "badges": [
+        {
+            "url": "https://vsmarketplacebadge.apphb.com/version/kasperbauer.vscode-upsource.svg",
+            "description": "Latest Version",
+            "href": "https://marketplace.visualstudio.com/items?itemName=kasperbauer.vscode-upsource"
+        },
+        {
+            "url": "https://vsmarketplacebadge.apphb.com/installs/kasperbauer.vscode-upsource.svg",
+            "description": "Total Downloads",
+            "href": "https://marketplace.visualstudio.com/items?itemName=kasperbauer.vscode-upsource"
+        },
+        {
+            "url": "https://vsmarketplacebadge.apphb.com/rating/kasperbauer.vscode-upsource.svg",
+            "description": "Ratings",
+            "href": "https://marketplace.visualstudio.com/items?itemName=kasperbauer.vscode-upsource"
+        },
+        {
+            "url": "https://badges.gitter.im/Join%20Chat.svg",
+            "description": "Join Chat",
+            "href": "https://gitter.im/code-settings-sync"
+        }
+    ],
     "activationEvents": [
         "onCommand:upsource.setup",
         "onCommand:upsource.openReviews",
