@@ -24,45 +24,23 @@ import { UpsConfig } from './models/UpsConfig';
 const rootPath = vscode.workspace.rootPath;
 
 export function activate(context: vscode.ExtensionContext) {
+    // show open reviews info message
     let checkForOpenReviewsOnLaunch = vscode.workspace.getConfiguration().get('upsource.checkForOpenReviewsOnLaunch');
     if (checkForOpenReviewsOnLaunch) checkForOpenReviews();
 
-    // create upsource.json config file with defaults
-    let setup = vscode.commands.registerCommand('upsource.setup', () => {
-        Config.setup();
-    });
+    let commands = [
+        { name: 'setup', callback: Config.setup },
+        { name: 'openReviews', callback: showOpenReviewOptions },
+        { name: 'allReviews', callback: showReviewQuickPicks },
+        { name: 'createReview', callback: showCreateReviewQuickPicks },
+        { name: 'customQueries', callback: showCustomQueries },
+        { name: 'closeReview', callback: showCloseReviewQuickPicks }
+    ];
 
-    // get open reviews and show a quick pick list
-    let openReviews = vscode.commands.registerCommand('upsource.openReviews', () => {
-        showOpenReviewOptions();
-    });
-
-    // get all reviews and show a quick pick list
-    let allReviews = vscode.commands.registerCommand('upsource.allReviews', () => {
-        showReviewQuickPicks();
-    });
-
-    // create review from current branch / revision
-    let createReview = vscode.commands.registerCommand('upsource.createReview', () => {
-        showCreateReviewQuickPicks();
-    });
-
-    // create review from current branch / revision
-    let customQueries = vscode.commands.registerCommand('upsource.customQueries', () => {
-        showCustomQueries();
-    });
-
-    // close review
-    let closeReview = vscode.commands.registerCommand('upsource.closeReview', () => {
-        showCloseReviewQuickPicks();
-    });
-
-    context.subscriptions.push(setup);
-    context.subscriptions.push(openReviews);
-    context.subscriptions.push(allReviews);
-    context.subscriptions.push(customQueries);
-    context.subscriptions.push(createReview);
-    context.subscriptions.push(closeReview);
+    commands.forEach(command => {
+        let subscription = vscode.commands.registerCommand(`upsource.${command.name}`, () => command.callback());
+        context.subscriptions.push(subscription);
+    })
 }
 
 function checkForOpenReviews(): void {    
