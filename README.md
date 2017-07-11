@@ -41,7 +41,7 @@ Example:
 
 `upsource.defaultConfig`
 Add your default config values here for faster setup. Any values provided will be pre-filled
-in the setup dialog. Password is left-out for security reasons.
+in the setup dialog. Password is left out for security reasons.
 
 Example:
 ```json
