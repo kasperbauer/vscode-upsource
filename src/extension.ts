@@ -6,7 +6,8 @@
 * - search for revision via [UPS] getRevisionsListFiltered
 * - add revision to review via [UPS] addRevisionToReview
 * - browse all projects
-* - close / delete review
+* - close / delete / rename review
+* - ask for credentials on setup
 */
 
 'use strict';
