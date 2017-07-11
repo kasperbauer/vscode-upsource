@@ -6,7 +6,6 @@
 * - browse all projects
 * - delete / rename review
 * - ask for credentials on setup
-* - settings: look for open reviews on startup (boolean)
 */
 
 'use strict';
@@ -25,7 +24,8 @@ import { UpsConfig } from './models/UpsConfig';
 const rootPath = vscode.workspace.rootPath;
 
 export function activate(context: vscode.ExtensionContext) {
-    checkForOpenReviews();
+    let checkForOpenReviewsOnLaunch = vscode.workspace.getConfiguration().get('upsource.checkForOpenReviewsOnLaunch');
+    if (checkForOpenReviewsOnLaunch) checkForOpenReviews();
 
     // create upsource.json config file with defaults
     let setup = vscode.commands.registerCommand('upsource.setup', () => {
@@ -59,7 +59,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(closeReview);
 }
 
-function checkForOpenReviews(): void {
+function checkForOpenReviews(): void {    
     Upsource.getReviewList('state: open').then(
         res => {
             if (res.totalCount) {
