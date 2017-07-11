@@ -1,13 +1,12 @@
 /*
 * TODO:
-* - add
 * - select revision via [UPS] getRevisionsList / [UPS] findCommits
-* - get all git branches via [UPS] getBranches
 * - search for revision via [UPS] getRevisionsListFiltered
 * - add revision to review via [UPS] addRevisionToReview
 * - browse all projects
 * - close / delete / rename review
 * - ask for credentials on setup
+* - settings: look for open reviews on startup (boolean)
 */
 
 'use strict';
@@ -161,26 +160,66 @@ function showCreateReviewQuickPicks(): void {
             label: 'For current branch',
             description: git.branch(rootPath),
             branch: git.branch(rootPath),
-            revisions: null
+            revisions: null,
+            action: null
         },
         {
             label: 'For most recent commit',
             description: git.short(rootPath),
             branch: null,
-            revisions: [git.long(rootPath)]
+            revisions: [git.long(rootPath)],
+            action: null
+        },
+        {
+            label: 'For specific branch',
+            description: 'Show branch list',
+            branch: null,
+            revisions: null,
+            action: 'getBranches'            
         }
     ];
 
     vscode.window.showQuickPick(items).then(selectedItem => {
         if (!selectedItem) return;
+        
+        let action = selectedItem.action;
+        if (action) {
+            switch (action) {
+                case 'getBranches':
+                    showBranchesQuickPicks();
+                    break;
+            }
+            return;
+        }
 
-        Upsource.createReview(selectedItem.branch, selectedItem.revisions).then(review => {
-            if (!review) return;
+        createReview(selectedItem.branch, selectedItem.revisions);
+    });
+}
 
-            vscode.window.showInformationMessage(
-                "Review '" + review.reviewId.reviewId + "' successfully created."
-            );
+function showBranchesQuickPicks(): void {
+    Upsource.getBranches().then(res => {
+        let items = res.branch.map(branch => {
+            return {
+                label: branch.name,
+                description: branch.lastRevision.revisionCommitMessage,
+                branch: branch.name,
+            };
         });
+
+        vscode.window.showQuickPick(items).then(selectedItem => {
+            if (!selectedItem) return;                
+            createReview(selectedItem.branch);
+        });
+    });    
+}
+
+function createReview(branch = null, revisions = null): void {
+    Upsource.createReview(branch, revisions).then(review => {
+        if (!review) return;
+
+        vscode.window.showInformationMessage(
+            "Review '" + review.reviewId.reviewId + "' successfully created."
+        );
     });
 }
 
