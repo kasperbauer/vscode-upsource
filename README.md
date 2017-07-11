@@ -1,22 +1,22 @@
 # vscode-upsource README
 
-Shows a list of your reviews within a given upsource project and opens them in your webbrowser.
+Provides basic interaction with your upsource reviews.
 
 ## Features
 
-- Setup  
-Generates an upsource.json file for use with this extension.
+`Upsource: Setup`  
+Generates an upsource.json file for use with this extension. Please setup first before using further commands.
 
-- Open Reviews  
-Shows a list of all open reviews in your project, filtered by common queries.
-
-- All Reviews  
+`Upsource: Show All Reviews`  
 Shows a list of all reviews in your project
 
-- Create Review
+`Upsource: Show Open Reviews`  
+Shows a list of all open reviews in your project, filtered by common queries.
+
+`Upsource: Create Review`  
 Create a review based on a branch or your last commit.
 
-- Close Review
+`Upsource: Close Review`  
 Close all reviews that are ready to close.
 
 ## Settings
