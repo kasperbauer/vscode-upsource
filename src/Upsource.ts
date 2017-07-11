@@ -77,12 +77,8 @@ function getReviewList(query?: string): Promise<ReviewListDTO> {
         };
 
         sendAPIRequest('getReviews', 'POST', params).then(
-            res => {
-                resolve(res.result);
-            },
-            err => {
-                reject(err);
-            }
+            res => resolve(res.result),
+            err => reject(err)
         );
     });
 }
@@ -102,13 +98,8 @@ function createReview(
         if (revisions) params = Object.assign(params, { revisions });
 
         sendAPIRequest('createReview', 'POST', params).then(
-            res => {
-                resolve(res.result);
-            },
-            err => {
-                console.log('ERROR', err);
-                reject(err);
-            }
+            res => resolve(res.result),
+            err => reject(err)
         );
     });
 }
@@ -121,12 +112,8 @@ function getBranches(): Promise<BranchListDTO> {
 
     return new Promise<BranchListDTO>((resolve, reject) => {
         sendAPIRequest('getBranches', 'POST', params).then(
-            res => {
-                resolve(res.result);
-            },
-            err => {
-                reject(err);
-            }
+            res => resolve(res.result),
+            err => reject(err)
         );
     });
 }
@@ -139,12 +126,8 @@ function closeReview(reviewId: ReviewIdDTO): Promise<any> {
 
     return new Promise<any>((resolve, reject) => {
         sendAPIRequest('closeReview', 'POST', params).then(
-            res => {
-                resolve(res.result);
-            },
-            err => {
-                reject(err);
-            }
+            res => resolve(res.result),
+            err => reject(err)
         );
     });
 }
