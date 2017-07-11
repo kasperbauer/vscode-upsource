@@ -2,6 +2,8 @@
 
 Provides basic interaction with your upsource reviews.
 
+![Commands](img/commands.png)
+
 ## Features
 
 `Upsource: Setup`  
@@ -9,6 +11,8 @@ Generates an upsource.json file for use with this extension. Please setup first 
 
 `Upsource: Show Reviews`  
 Shows a list of all reviews with certain queries.
+
+![Show Reviews](img/showReviews.png)
 
 `Upsource: Create Review`  
 Create a review based on a branch or your last commit.
