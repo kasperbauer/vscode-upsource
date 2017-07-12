@@ -144,10 +144,10 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
         if (!totalCount) vscode.window.showInformationMessage('No reviews');
         else {
             let items = reviews.map(review => {
-                let authorId = review.participants.find(
-                        participant => participant.role == RoleInReviewEnum.Author
-                    ).userId,
-                    author = _users.find(user => user.userId == authorId);
+                let author: any = review.participants.find(
+                    participant => participant.role == RoleInReviewEnum.Author
+                );
+                if (author) author = _users.find(user => user.userId == author.userId) || null;
 
                 let label = review.reviewId.reviewId;
                 if (review.isUnread) label += ' *';
@@ -156,8 +156,8 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
 
                 let detail = review.state == ReviewStateEnum.Open ? '️⚠️ open' : '🔒 closed';
                 if (review.isReadyToClose) detail = '✅ ready to close';
-                (detail += ', ' + author.name), (detail +=
-                    ', ' + review.participants.length + ' participants');
+                if (author) detail += ', ' + author.name;
+                detail += ', ' + review.participants.length + ' participants';
                 detail += ', ' + review.discussionCounter.counter + ' discussions';
 
                 return { label, description, detail, review };
