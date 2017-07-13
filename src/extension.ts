@@ -1,11 +1,15 @@
 /*
 * TODO:
+*
+* 1.4.0:
+* - show reviews in custom view
+*
+* later
 * - select revision via [UPS] getRevisionsList / [UPS] findCommits
 * - search for revision via [UPS] getRevisionsListFiltered
 * - add revision to review via [UPS] addRevisionToReview
 * - browse all projects
 * - delete / rename review
-* - get / show user names
 */
 
 'use strict';
