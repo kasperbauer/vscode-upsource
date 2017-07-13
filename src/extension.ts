@@ -132,22 +132,6 @@ function showReviews(): void {
     });
 }
 
-function showCustomQueries() {
-    let items = <any[]>vscode.workspace.getConfiguration().get('upsource.customQueries');
-
-    if (!items.length) {
-        vscode.window.showInformationMessage(
-            'No custom queries defined. Add custom queries in the user settings.'
-        );
-        return;
-    }
-
-    vscode.window.showQuickPick(items).then(selectedItem => {
-        if (!selectedItem) return;
-        showReviewQuickPicks(selectedItem.query);
-    });
-}
-
 function showReviewQuickPicks(query?: string, callback?: Function): void {
     Upsource.getReviewList(query).then(res => {
         let totalCount = res.totalCount,
