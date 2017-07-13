@@ -5,15 +5,13 @@ import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
 import { ReviewTreeItem } from './models/ReviewTreeItem';
 
-export default class ReviewsProvider implements vscode.TreeDataProvider<ReviewTreeItem> {
+export default class ReviewsDataProvider implements vscode.TreeDataProvider<ReviewTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<ReviewTreeItem | null> = new vscode.EventEmitter<ReviewTreeItem | null>();
     readonly onDidChangeTreeData: vscode.Event<ReviewTreeItem | null> = this
         ._onDidChangeTreeData.event;
 
-    constructor() {}
-
-    getChildren(element?: ReviewTreeItem): Thenable<ReviewTreeItem[]> {
-        return new Promise<any>((resolve, reject) => {
+    getChildren(element?: ReviewTreeItem): Promise<ReviewTreeItem[]> {
+        return new Promise((resolve, reject) => {
             Upsource.getReviewList('state: open').then(
                 res => {
                     let items = res.reviews.map(review => {
@@ -29,7 +27,7 @@ export default class ReviewsProvider implements vscode.TreeDataProvider<ReviewTr
         });
     }
 
-	getTreeItem(element: ReviewTreeItem): vscode.TreeItem {
-		return element;
+	getTreeItem(element: ReviewTreeItem): ReviewTreeItem | Promise<ReviewTreeItem> {
+        return element;
 	}
 }

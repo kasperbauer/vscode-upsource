@@ -18,7 +18,7 @@ import * as fs from 'fs';
 
 import Config from './Config';
 import Upsource from './Upsource';
-import ReviewsProvider from './ReviewsProvider';
+import ReviewsDataProvider from './ReviewsDataProvider';
 import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewIdDTO } from './models/ReviewIdDTO';
@@ -30,7 +30,6 @@ const rootPath = vscode.workspace.rootPath;
 let _users: FullUserInfoDTO[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
-    vscode.window.registerTreeDataProvider('upsourceReviews', ReviewsProvider);
     getUsers();
 
     let checkForOpenReviewsOnLaunch = vscode.workspace
@@ -50,6 +49,12 @@ export function activate(context: vscode.ExtensionContext) {
             command.callback()
         );
         context.subscriptions.push(subscription);
+    });
+
+    // custom tree view
+    vscode.window.registerTreeDataProvider('upsourceReviews', new ReviewsDataProvider());
+    vscode.commands.registerCommand('upsource.openReviewInBrowser', review => {
+        openReviewInBrowser(review);
     });
 }
 
@@ -177,12 +182,12 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
 }
 
 function openReviewInBrowser(review: ReviewDescriptorDTO) {
-                    Config.get().then((config: UpsConfig) => {
-                        let url =
-                            config.url +
-                            '/' +
-                            config.projectId +
-                            '/review/' +
+    Config.get().then((config: UpsConfig) => {
+        let url =
+            config.url +
+            '/' +
+            config.projectId +
+            '/review/' +
             review.reviewId.reviewId;
 
         vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
