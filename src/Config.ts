@@ -10,7 +10,6 @@ function getConfig(): Promise<UpsConfig> {
     return new Promise<UpsConfig>((resolve, reject) => {
         fs.access(configFilePath, fs.constants.R_OK, err => {
             if (err) {
-                vscode.window.showErrorMessage('upsource.json is not readable.');
                 reject(err);
                 return;
             }

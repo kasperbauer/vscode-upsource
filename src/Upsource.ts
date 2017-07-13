@@ -62,6 +62,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                 );
             },
             err => {
+                vscode.window.showErrorMessage('upsource.json is not readable.');
                 statusBarMessage.dispose();
                 reject(err);
             }
