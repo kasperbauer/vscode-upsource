@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 
+import Config from './Config';
 import Upsource from './Upsource';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
@@ -13,8 +14,10 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
 
     getChildren(element?: ReviewTreeItem): Promise<ReviewTreeItem[]> {
         return new Promise((resolve, reject) => {
-            let query = element ? 'state: closed' : 'state: open';
+            if (!Config.fileExists()) reject();
 
+            let query = element ? 'state: closed' : 'state: open';
+            
             Upsource.getReviewList(query).then(
                 res => {
                     if (!res.totalCount) {
@@ -50,10 +53,7 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
 
                     resolve(items);
                 },
-                err => {
-                    console.error(err);
-                    reject(err);
-                }
+                err => reject(err)
             );
         });
     }
