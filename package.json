@@ -48,7 +48,8 @@
         "onCommand:upsource.showReviews",
         "onCommand:upsource.createReview",
         "onCommand:upsource.closeReview",
-        "workspaceContains:upsource.json"
+        "workspaceContains:upsource.json",
+        "onView:upsourceReviews"
     ],
     "main": "./out/src/extension",
     "contributes": {
