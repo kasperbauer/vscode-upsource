@@ -49,7 +49,7 @@
         "onCommand:upsource.createReview",
         "onCommand:upsource.closeReview",
         "workspaceContains:upsource.json",
-        "onView:upsourceReviews"
+        "onView:upsourceView"
     ],
     "main": "./out/src/extension",
     "contributes": {
@@ -69,6 +69,18 @@
             {
                 "command": "upsource.closeReview",
                 "title": "Upsource: Close Review"
+            },
+            {
+                "command": "upsource.refreshDataProvider",
+                "title": "Refresh",
+                "icon": {
+                    "light": "resources/light/refresh.svg",
+                    "dark": "resources/dark/refresh.svg"
+                }
+            },
+            {
+                "command": "upsource.closeReviewAndRefresh",
+                "title": "Close Review"
             }
         ],
         "configuration": {
@@ -95,8 +107,23 @@
         "views": {
 			"explorer": [
 				{
-					"id": "upsourceReviews",
-                    "name": "Upsource"
+					"id": "upsourceView",
+                    "name": "Upsource: Open Reviews"
+                }
+            ]
+        },
+        "menus": {
+            "view/title": [
+                {
+                    "command": "upsource.refreshDataProvider",
+                    "when": "view == upsourceView",
+                    "group": "navigation"
+                }
+            ],
+            "view/item/context": [
+                {
+                    "command": "upsource.closeReviewAndRefresh",
+                    "when": "view == upsourceView && viewItem == review"
                 }
             ]
         }

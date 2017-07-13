@@ -10,7 +10,6 @@ export class ReviewTreeItem extends vscode.TreeItem {
         public readonly review?: ReviewDescriptorDTO
     ) {
         super(label, collapsibleState);
-        
         if (review) {
             this.command = {
                 command: 'upsource.openReviewInBrowser',
@@ -22,6 +21,9 @@ export class ReviewTreeItem extends vscode.TreeItem {
                 light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', 'document.svg'),
                 dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', 'document.svg')
             };
+            
+            this.contextValue = 'review';
         }
+
     }
 }

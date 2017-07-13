@@ -24,6 +24,7 @@ import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewIdDTO } from './models/ReviewIdDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
 import { ReviewStateEnum, RoleInReviewEnum } from './models/Enums';
+import { ReviewTreeItem } from './models/ReviewTreeItem';
 import { UpsConfig } from './models/UpsConfig';
 
 const rootPath = vscode.workspace.rootPath;
@@ -52,9 +53,14 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     // custom tree view
-    vscode.window.registerTreeDataProvider('upsourceReviews', new ReviewsDataProvider());
+    let reviewDataProvider = new ReviewsDataProvider();
+    vscode.window.registerTreeDataProvider('upsourceView', reviewDataProvider);
     vscode.commands.registerCommand('upsource.openReviewInBrowser', review => {
         openReviewInBrowser(review);
+    });
+    vscode.commands.registerCommand('upsource.refreshDataProvider', () => reviewDataProvider.refresh());
+    vscode.commands.registerCommand('upsource.closeReviewAndRefresh', (item: ReviewTreeItem) => {
+        Upsource.closeReview(item.review.reviewId).then(() => reviewDataProvider.refresh());
     });
 }
 
