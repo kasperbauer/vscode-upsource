@@ -11,15 +11,17 @@ export class ReviewTreeItem extends vscode.TreeItem {
     ) {
         super(label, collapsibleState);
         
-        this.command = {
-            command: 'upsource.openReviewInBrowser',
-            title: '',
-            arguments: [ this.review ]
-        };
+        if (review) {
+            this.command = {
+                command: 'upsource.openReviewInBrowser',
+                title: '',
+                arguments: [ this.review ]
+            };
 
-        this.iconPath = {
-            light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', 'document.svg'),
-            dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', 'document.svg')
-        };
+            this.iconPath = {
+                light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', 'document.svg'),
+                dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', 'document.svg')
+            };
+        }
     }
 }
