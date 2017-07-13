@@ -17,7 +17,7 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
             if (!Config.fileExists()) reject();
 
             let query = element ? 'state: closed' : 'state: open';
-            
+
             Upsource.getReviewList(query).then(
                 res => {
                     if (!res.totalCount) {
@@ -53,7 +53,10 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
 
                     resolve(items);
                 },
-                err => reject(err)
+                err => {
+                    console.error(err);
+                    reject(err);
+                }
             );
         });
     }
