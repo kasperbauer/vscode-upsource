@@ -81,6 +81,14 @@
             {
                 "command": "upsource.closeReviewAndRefresh",
                 "title": "Close Review"
+            },
+            {
+                "command": "upsource.createReview",
+                "title": "Create Review",
+                "icon": {
+                    "light": "resources/light/document.svg",
+                    "dark": "resources/dark/document.svg"
+                }
             }
         ],
         "configuration": {
@@ -114,6 +122,11 @@
         },
         "menus": {
             "view/title": [
+                {
+                    "command": "upsource.createReview",
+                    "when": "view == upsourceView",
+                    "group": "navigation"
+                },
                 {
                     "command": "upsource.refreshDataProvider",
                     "when": "view == upsourceView",
