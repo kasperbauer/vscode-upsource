@@ -90,6 +90,14 @@
                     "description": "Add your default config here for faster setup. { url: string, login: string, projectId: string }"
                 }
             }
+        },
+        "views": {
+			"explorer": [
+				{
+					"id": "upsourceReviews",
+                    "name": "Upsource"
+                }
+            ]
         }
     },
     "scripts": {
