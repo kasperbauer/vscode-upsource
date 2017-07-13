@@ -12,8 +12,6 @@
 * - delete / rename review
 */
 
-'use strict';
-
 import * as vscode from 'vscode';
 import * as opn from 'opn';
 import * as git from 'git-rev-sync';
@@ -21,6 +19,7 @@ import * as fs from 'fs';
 
 import Config from './Config';
 import Upsource from './Upsource';
+import ReviewsProvider from './ReviewsProvider';
 import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewIdDTO } from './models/ReviewIdDTO';
@@ -32,6 +31,7 @@ const rootPath = vscode.workspace.rootPath;
 let _users: FullUserInfoDTO[] = [];
 
 export function activate(context: vscode.ExtensionContext) {
+    vscode.window.registerTreeDataProvider('upsourceReviews', ReviewsProvider);
     getUsers();
 
     let checkForOpenReviewsOnLaunch = vscode.workspace
