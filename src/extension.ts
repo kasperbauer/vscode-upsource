@@ -13,7 +13,6 @@
 */
 
 import * as vscode from 'vscode';
-import * as opn from 'opn';
 import * as git from 'git-rev-sync';
 import * as fs from 'fs';
 
@@ -168,21 +167,25 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
             vscode.window.showQuickPick(items).then(selectedItem => {
                 if (!selectedItem) return;
 
-                if (callback) callback(selectedItem.review);
-                else {
+                let review = selectedItem.review;
+
+                if (callback) callback(review);
+                else openReviewInBrowser(review);
+            });
+        }
+    });
+}
+
+function openReviewInBrowser(review: ReviewDescriptorDTO) {
                     Config.get().then((config: UpsConfig) => {
                         let url =
                             config.url +
                             '/' +
                             config.projectId +
                             '/review/' +
-                            selectedItem.review.reviewId.reviewId;
+            review.reviewId.reviewId;
 
-                        opn(url);
-                    });
-                }
-            });
-        }
+        vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
     });
 }
 

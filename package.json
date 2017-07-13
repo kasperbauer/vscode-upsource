@@ -117,7 +117,6 @@
     "dependencies": {
         "@types/request": "^0.0.45",
         "git-rev-sync": "^1.9.1",
-        "opn": "^5.0.0",
         "request": "^2.81.0"
     }
 }
