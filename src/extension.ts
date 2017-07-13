@@ -69,9 +69,7 @@ function checkForOpenReviews(): void {
                 );
             }
         },
-        err => {
-            console.log(err);
-        }
+        err => console.error(err)
     );
 }
 
