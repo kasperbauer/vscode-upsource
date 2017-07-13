@@ -64,30 +64,22 @@
             },
             {
                 "command": "upsource.createReview",
-                "title": "Upsource: Create Review"
-            },
-            {
-                "command": "upsource.closeReview",
-                "title": "Upsource: Close Review"
-            },
-            {
-                "command": "upsource.refreshDataProvider",
-                "title": "Refresh",
+                "title": "Upsource: Create Review",
                 "icon": {
-                    "light": "resources/light/refresh.svg",
-                    "dark": "resources/dark/refresh.svg"
+                    "light": "resources/light/document.svg",
+                    "dark": "resources/dark/document.svg"
                 }
             },
             {
                 "command": "upsource.closeReviewAndRefresh",
-                "title": "Close Review"
+                "title": "Upsource: Close Review"
             },
             {
-                "command": "upsource.createReview",
-                "title": "Create Review",
+                "command": "upsource.refreshDataProvider",
+                "title": "Upsource: Refresh",
                 "icon": {
-                    "light": "resources/light/document.svg",
-                    "dark": "resources/dark/document.svg"
+                    "light": "resources/light/refresh.svg",
+                    "dark": "resources/dark/refresh.svg"
                 }
             }
         ],
