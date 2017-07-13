@@ -58,7 +58,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('upsource.openReviewInBrowser', review => {
         openReviewInBrowser(review);
     });
-    vscode.commands.registerCommand('upsource.refreshDataProvider', () => reviewDataProvider.refresh());
+    vscode.commands.registerCommand('upsource.refreshDataProvider', () =>
+        reviewDataProvider.refresh()
+    );
     vscode.commands.registerCommand('upsource.closeReviewAndRefresh', (item: ReviewTreeItem) => {
         Upsource.closeReview(item.review.reviewId).then(() => reviewDataProvider.refresh());
     });
@@ -133,52 +135,50 @@ function showReviews(): void {
 }
 
 function showReviewQuickPicks(query?: string, callback?: Function): void {
-    Upsource.getReviewList(query).then(res => {
-        let totalCount = res.totalCount,
-            reviews = res.reviews;
+    Upsource.getReviewList(query).then(
+        res => {
+            let totalCount = res.totalCount,
+                reviews = res.reviews;
 
-        if (!totalCount) vscode.window.showInformationMessage('No reviews');
-        else {
-            let items = reviews.map(review => {
-                let author: any = review.participants.find(
-                    participant => participant.role == RoleInReviewEnum.Author
-                );
-                if (author) author = _users.find(user => user.userId == author.userId) || null;
+            if (!totalCount) vscode.window.showInformationMessage('No reviews');
+            else {
+                let items = reviews.map(review => {
+                    let author: any = review.participants.find(
+                        participant => participant.role == RoleInReviewEnum.Author
+                    );
+                    if (author) author = _users.find(user => user.userId == author.userId) || null;
 
-                let label = review.reviewId.reviewId;
-                if (review.isUnread) label += ' *';
+                    let label = review.reviewId.reviewId;
+                    if (review.isUnread) label += ' *';
 
-                let description = review.title;
+                    let description = review.title;
 
-                let detail = review.state == ReviewStateEnum.Open ? '️⚠️ open' : '🔒 closed';
-                if (review.isReadyToClose) detail = '✅ ready to close';
-                if (author) detail += ', ' + author.name;
-                detail += ', ' + review.participants.length + ' participants';
-                detail += ', ' + review.discussionCounter.counter + ' discussions';
+                    let detail = review.state == ReviewStateEnum.Open ? '️⚠️ open' : '🔒 closed';
+                    if (review.isReadyToClose) detail = '✅ ready to close';
+                    if (author) detail += ', ' + author.name;
+                    detail += ', ' + review.participants.length + ' participants';
+                    detail += ', ' + review.discussionCounter.counter + ' discussions';
 
-                return { label, description, detail, review };
-            });
+                    return { label, description, detail, review };
+                });
 
-            vscode.window.showQuickPick(items).then(selectedItem => {
-                if (!selectedItem) return;
+                vscode.window.showQuickPick(items).then(selectedItem => {
+                    if (!selectedItem) return;
 
-                let review = selectedItem.review;
+                    let review = selectedItem.review;
 
-                if (callback) callback(review);
-                else openReviewInBrowser(review);
-            });
-        }
-    });
+                    if (callback) callback(review);
+                    else openReviewInBrowser(review);
+                });
+            }
+        },
+        err => showError(err)
+    );
 }
 
 function openReviewInBrowser(review: ReviewDescriptorDTO) {
     Config.get().then((config: UpsConfig) => {
-        let url =
-            config.url +
-            '/' +
-            config.projectId +
-            '/review/' +
-            review.reviewId.reviewId;
+        let url = config.url + '/' + config.projectId + '/review/' + review.reviewId.reviewId;
 
         vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(url));
     });
@@ -256,21 +256,32 @@ function showBranchesQuickPicks(): void {
 }
 
 function createReview(branch = null, revisions = null): void {
-    Upsource.createReview(branch, revisions).then(review => {
-        if (!review) return;
+    Upsource.createReview(branch, revisions).then(
+        review => {
+            if (!review) return;
 
-        vscode.window.showInformationMessage(
-            "Review '" + review.reviewId.reviewId + "' successfully created."
-        );
-    });
+            vscode.window.showInformationMessage(
+                "Review '" + review.reviewId.reviewId + "' successfully created."
+            );
+        },
+        err => showError(err)
+    );
 }
 
 function closeReview(review: ReviewDescriptorDTO) {
-    Upsource.closeReview(review.reviewId).then(() => {
-        vscode.window.showInformationMessage(
-            "Review '" + review.reviewId.reviewId + "' successfully closed."
-        );
-    });
+    Upsource.closeReview(review.reviewId).then(
+        () => {
+            vscode.window.showInformationMessage(
+                "Review '" + review.reviewId.reviewId + "' successfully closed."
+            );
+        },
+        err => showError(err)
+    );
+}
+
+function showError(err) {
+    vscode.window.showErrorMessage(err);
+    console.error(err);
 }
 
 export function deactivate() {}
