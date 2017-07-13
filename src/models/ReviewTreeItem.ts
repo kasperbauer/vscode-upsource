@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as path from 'path';
 
 import { ReviewDescriptorDTO } from './ReviewDescriptorDTO';
 
@@ -14,6 +15,11 @@ export class ReviewTreeItem extends vscode.TreeItem {
             command: 'upsource.openReviewInBrowser',
             title: '',
             arguments: [ this.review ]
+        };
+
+        this.iconPath = {
+            light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', 'document.svg'),
+            dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', 'document.svg')
         };
     }
 }
