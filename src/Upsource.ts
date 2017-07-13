@@ -12,14 +12,13 @@ import { UpsConfig } from './models/UpsConfig';
 
 function sendAPIRequest(path: string, method: string, params: Object = {}): Promise<any> {
     return new Promise<any>((resolve, reject) => {
-        let statusBarMessage = vscode.window.setStatusBarMessage(
-            'Contacting Upsource API...',
-            3000
-        );
-
         Config.get().then(
             (config: UpsConfig) => {
-                let body = Object.assign({ projectId: config.projectId }, params);
+                let body = Object.assign({ projectId: config.projectId }, params),
+                    statusBarMessage = vscode.window.setStatusBarMessage(
+                        'Contacting Upsource API...',
+                        3000
+                    );
 
                 console.log('SENDING REQUEST');
                 console.log(body);
@@ -62,8 +61,6 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                 );
             },
             err => {
-                vscode.window.showErrorMessage('upsource.json is not readable.');
-                statusBarMessage.dispose();
                 reject(err);
             }
         );
