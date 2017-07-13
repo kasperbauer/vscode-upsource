@@ -9,5 +9,11 @@ export class ReviewTreeItem extends vscode.TreeItem {
         public readonly review?: ReviewDescriptorDTO
     ) {
         super(label, collapsibleState);
+        
+        this.command = {
+            command: 'upsource.openReviewInBrowser',
+            title: '',
+            arguments: [ this.review ]
+        };
     }
 }
