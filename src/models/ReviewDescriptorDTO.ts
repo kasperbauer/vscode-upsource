@@ -1,5 +1,6 @@
 import { ParticipantInReviewDTO } from './ParticipantInReviewDTO';
 import { ReviewIdDTO } from './ReviewIdDTO';
+import { ReviewStateEnum } from './Enums';
 import { SimpleDiscussionCounterDTO } from './SimpleDiscussionCounterDTO';
 
 export class ReviewDescriptorDTO {
@@ -7,7 +8,7 @@ export class ReviewDescriptorDTO {
         public reviewId: ReviewIdDTO,
         public title: string,
         public participants: ParticipantInReviewDTO[],
-        public state: number, // 1 = open, 2 = closed
+        public state: ReviewStateEnum,
         public branch: string[],
         // public issue: IssueIdDTO[],
         public updatedAt: number,
