@@ -14,7 +14,15 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
 
     getChildren(element?: ReviewTreeItem): Promise<ReviewTreeItem[]> {
         return new Promise((resolve, reject) => {
-            if (!Config.fileExists()) reject();
+            if (!Config.fileExists()) {
+                let statusBarMessage = vscode.window.setStatusBarMessage(
+                    'upsource.json does not exist.',
+                    3000
+                );
+
+                reject();
+                return;
+            }
 
             let query = element ? 'state: closed' : 'state: open';
 
