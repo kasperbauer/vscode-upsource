@@ -5,22 +5,20 @@ import { UpsConfig } from './models/UpsConfig';
 
 const rootPath = vscode.workspace.rootPath;
 const configFilePath = rootPath + '/upsource.json';
-    
-function configFileExists(): boolean {
-    return fs.existsSync(configFilePath);
-}
 
 function getConfig(): Promise<UpsConfig> {
     return new Promise<UpsConfig>((resolve, reject) => {
-        if (configFileExists()) {
-            vscode.window.showErrorMessage('upsource.json is not readable.');
-            reject();
-            return;
-        }
+        fs.access(configFilePath, fs.constants.R_OK, err => {
+            if (err) {
+                vscode.window.showErrorMessage('upsource.json is not readable.');
+                reject(err);
+                return;
+            }
 
-        fs.readFile(configFilePath, 'utf8', function(err, data) {
-            if (err) reject(err);
-            else resolve(<UpsConfig>JSON.parse(data));
+            fs.readFile(configFilePath, 'utf8', function(err, data) {
+                if (err) reject(err);
+                else resolve(<UpsConfig>JSON.parse(data));
+            });
         });
     });
 }
@@ -110,6 +108,5 @@ function showFileInTextEditor(filePath): Promise<vscode.TextDocument> {
 
 export default {
     get: getConfig,
-    setup: setup,
-    fileExists: configFileExists
+    setup: setup
 };
