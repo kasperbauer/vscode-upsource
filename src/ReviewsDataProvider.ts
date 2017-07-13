@@ -3,6 +3,7 @@ import * as vscode from 'vscode';
 import Upsource from './Upsource';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
+import { ReviewStateEnum } from './models/Enums';
 import { ReviewTreeItem } from './models/ReviewTreeItem';
 
 export default class ReviewsDataProvider implements vscode.TreeDataProvider<ReviewTreeItem> {
@@ -11,23 +12,32 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
         .event;
 
     getChildren(element?: ReviewTreeItem): Promise<ReviewTreeItem[]> {
+        
         return new Promise((resolve, reject) => {
+            if (element) {
+                reject();
+                return;
+            }
+
             Upsource.getReviewList().then(
                 res => {
                     if (!res.totalCount) {
                         resolve([
                             new ReviewTreeItem(
-                                'No open reviews.',
+                                'No reviews.',
                                 vscode.TreeItemCollapsibleState.None
                             )
                         ]);
                         return;
                     }
 
-                    let items = res.reviews.map(review => {
+                    let items = res.reviews.sort((a, b) => {
+                        return a.state - b.state;
+                    }).map(review => {
                         let title = review.reviewId.reviewId + ` (${review.title})`;
-                        if (review.discussionCounter.hasUnresolved) title += ' 💬';
-                        if (review.isReadyToClose) title += ' ✅';
+                        if (review.state == ReviewStateEnum.Closed) title += ' 🔒';
+                        else if (review.isReadyToClose) title += ' ✅';
+                        else if (review.discussionCounter.hasUnresolved) title += ' 💬';
 
                         return new ReviewTreeItem(
                             title,
