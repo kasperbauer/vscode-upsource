@@ -12,39 +12,42 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
         .event;
 
     getChildren(element?: ReviewTreeItem): Promise<ReviewTreeItem[]> {
-        
         return new Promise((resolve, reject) => {
-            if (element) {
-                reject();
-                return;
-            }
+            let query = element ? 'state: closed' : 'state: open';
 
-            Upsource.getReviewList().then(
+            Upsource.getReviewList(query).then(
                 res => {
                     if (!res.totalCount) {
                         resolve([
-                            new ReviewTreeItem(
-                                'No reviews.',
-                                vscode.TreeItemCollapsibleState.None
-                            )
+                            new ReviewTreeItem('No reviews.', vscode.TreeItemCollapsibleState.None)
                         ]);
                         return;
                     }
 
-                    let items = res.reviews.sort((a, b) => {
-                        return a.state - b.state;
-                    }).map(review => {
+                    let items = res.reviews.map(review => {
                         let title = review.reviewId.reviewId + ` (${review.title})`;
-                        if (review.state == ReviewStateEnum.Closed) title += ' 🔒';
-                        else if (review.isReadyToClose) title += ' ✅';
+                        // if (review.state == ReviewStateEnum.Closed) title = '🔒 ' + title;
+                        if (review.isReadyToClose) title += ' ✅';
                         else if (review.discussionCounter.hasUnresolved) title += ' 💬';
 
                         return new ReviewTreeItem(
                             title,
                             vscode.TreeItemCollapsibleState.None,
+                            'review',
                             review
                         );
                     });
+
+                    if (!element) {
+                        items = items.concat([
+                            new ReviewTreeItem(
+                                'Closed Reviews',
+                                vscode.TreeItemCollapsibleState.Collapsed,
+                                'folder'
+                            )
+                        ]);
+                    }
+
                     resolve(items);
                 },
                 err => {
