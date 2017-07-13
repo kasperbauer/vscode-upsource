@@ -14,8 +14,11 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
         return new Promise((resolve, reject) => {
             Upsource.getReviewList('state: open').then(
                 res => {
-                    if (!res.totalCount) return [];
-
+                    if (!res.totalCount) {
+                        resolve([]);
+                        return;
+                    }
+                    
                     let items = res.reviews.map(review => {
                         let title = review.reviewId.reviewId + ` (${review.title})`;
                         return new ReviewTreeItem(title, vscode.TreeItemCollapsibleState.None, review);
@@ -32,5 +35,9 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
 
 	getTreeItem(element: ReviewTreeItem): ReviewTreeItem | Promise<ReviewTreeItem> {
         return element;
+    }
+    
+	refresh(): void {
+		this._onDidChangeTreeData.fire();
 	}
 }
