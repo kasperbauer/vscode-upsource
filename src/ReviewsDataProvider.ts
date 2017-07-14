@@ -23,31 +23,32 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
                 reject();
                 return;
             }
+            
+            let state = element ? 'closed' : 'open';
 
-            let query = element ? 'state: closed' : 'state: open';
-
-            Upsource.getReviewList(query).then(
+            Upsource.getReviewList(`state: ${state}`).then(
                 res => {
-                    if (!res.totalCount) {
-                        resolve([
-                            new ReviewTreeItem('No reviews.', vscode.TreeItemCollapsibleState.None)
-                        ]);
-                        return;
+                    let items: ReviewTreeItem[] = [];
+
+                    if (res.totalCount) {
+                        items = res.reviews.map(review => {
+                            let title = review.reviewId.reviewId + ` (${review.title})`;
+                            // if (review.state == ReviewStateEnum.Closed) title = '🔒 ' + title;
+                            if (review.isReadyToClose) title += ' ✅';
+                            else if (review.discussionCounter.hasUnresolved) title += ' 💬';
+
+                            return new ReviewTreeItem(
+                                title,
+                                vscode.TreeItemCollapsibleState.None,
+                                'review',
+                                review
+                            );
+                        });
+                    } else {
+                        items = [
+                            new ReviewTreeItem(`No ${state} reviews.`, vscode.TreeItemCollapsibleState.None)
+                        ];
                     }
-
-                    let items = res.reviews.map(review => {
-                        let title = review.reviewId.reviewId + ` (${review.title})`;
-                        // if (review.state == ReviewStateEnum.Closed) title = '🔒 ' + title;
-                        if (review.isReadyToClose) title += ' ✅';
-                        else if (review.discussionCounter.hasUnresolved) title += ' 💬';
-
-                        return new ReviewTreeItem(
-                            title,
-                            vscode.TreeItemCollapsibleState.None,
-                            'review',
-                            review
-                        );
-                    });
 
                     if (!element) {
                         items = items.concat([
