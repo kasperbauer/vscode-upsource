@@ -1,16 +1,17 @@
 # vscode-upsource README
 
 Provides basic interaction with your upsource reviews.
+Also adds a custom explorer view that lists all open and closed reviews.
 
 ![Commands](img/commands.png)
 
-## Features
+## Commands
 
 `Upsource: Setup`  
 Generates an upsource.json file for use with this extension. Please setup first before using further commands.
 
 `Upsource: Show Reviews`  
-Shows a list of all reviews with certain queries.
+Shows a list of all reviews with certain queries and opens them in your browser.
 
 ![Show Reviews](img/showReviews.png)
 
@@ -18,7 +19,10 @@ Shows a list of all reviews with certain queries.
 Create a review based on a branch or your last commit.
 
 `Upsource: Close Review`  
-Close all reviews that are ready to close.
+Close reviews that are ready to close.
+
+`Upsource: Refresh`  
+Fetches reviews and refreshes upsource custom view.
 
 ## Settings
 
@@ -53,6 +57,9 @@ Example:
     }
 ]
 ```
+
+`upsource.refreshInterval`  
+Number of minutes between auto-refresh. Set to 0 for no refresh.
 
 ## Known Issues
 

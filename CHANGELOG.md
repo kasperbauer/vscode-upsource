@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.0] 2017-07-16
+### Added
+- custom explorer view with open & closed reviews
+- auto-refresh custom view in specific interval
+- new setting: `upsource.refreshInterval`
+### Fixed
+- wrong error display
+
 ## [1.3.1] 2017-07-12
 ### Fixed
 - show review list when no author found
