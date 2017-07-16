@@ -101,6 +101,11 @@
                     "type": "object",
                     "default": {},
                     "description": "Add your default config here for faster setup. { url: string, login: string, projectId: string }"
+                },
+                "upsource.refreshInterval": {
+                    "type": "integer",
+                    "default": 5,
+                    "description": "Number of minutes between auto-refresh. Set to 0 for no refresh."
                 }
             }
         },

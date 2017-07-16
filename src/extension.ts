@@ -1,16 +1,12 @@
 /*
-* TODO:
-*
-* 1.4.0:
-* - show reviews in custom view
-*
-* later
-* - select revision via [UPS] getRevisionsList / [UPS] findCommits
-* - search for revision via [UPS] getRevisionsListFiltered
-* - add revision to review via [UPS] addRevisionToReview
-* - browse all projects
-* - delete / rename review
-*/
+ * TODO:
+ *
+ * - select revision via [UPS] getRevisionsList / [UPS] findCommits
+ * - search for revision via [UPS] getRevisionsListFiltered
+ * - add revision to review via [UPS] addRevisionToReview
+ * - browse all projects
+ * - delete / rename review
+ */
 
 import * as vscode from 'vscode';
 import * as git from 'git-rev-sync';
@@ -28,21 +24,26 @@ import { ReviewTreeItem } from './models/ReviewTreeItem';
 import { UpsConfig } from './models/UpsConfig';
 
 const rootPath = vscode.workspace.rootPath;
-let _users: FullUserInfoDTO[] = [];
+
+let _users: FullUserInfoDTO[] = [],
+    _refreshInterval: any = null,
+    _reviewDataProvider = new ReviewsDataProvider();
 
 export function activate(context: vscode.ExtensionContext) {
-    getUsers();
+    /*
+     * CUSTOM TREE VIEW
+     */
+    vscode.window.registerTreeDataProvider('upsourceView', _reviewDataProvider);
 
-    let checkForOpenReviewsOnLaunch = vscode.workspace
-        .getConfiguration()
-        .get('upsource.checkForOpenReviewsOnLaunch');
-    if (checkForOpenReviewsOnLaunch) checkForOpenReviews();
-
+    /*
+     * COMMANDS
+     */
     let commands = [
         { name: 'setup', callback: Config.setup },
         { name: 'showReviews', callback: showReviews },
         { name: 'createReview', callback: showCreateReviewQuickPicks },
-        { name: 'closeReview', callback: showCloseReviewQuickPicks }
+        { name: 'closeReview', callback: showCloseReviewQuickPicks },
+        { name: 'refreshDataProvider', callback: _reviewDataProvider.refresh }
     ];
 
     commands.forEach(command => {
@@ -52,18 +53,21 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(subscription);
     });
 
-    // custom tree view
-    let reviewDataProvider = new ReviewsDataProvider();
-    vscode.window.registerTreeDataProvider('upsourceView', reviewDataProvider);
     vscode.commands.registerCommand('upsource.openReviewInBrowser', review => {
         openReviewInBrowser(review);
     });
-    vscode.commands.registerCommand('upsource.refreshDataProvider', () =>
-        reviewDataProvider.refresh()
-    );
     vscode.commands.registerCommand('upsource.closeReviewAndRefresh', (item: ReviewTreeItem) => {
-        Upsource.closeReview(item.review.reviewId).then(() => reviewDataProvider.refresh());
+        Upsource.closeReview(item.review.reviewId).then(() => _reviewDataProvider.refresh());
     });
+
+    /*
+     * ON INIT
+     */
+    getUsers();
+
+    let workspaceConfig = vscode.workspace.getConfiguration('upsource');
+    if (workspaceConfig.get('checkForOpenReviewsOnLaunch')) checkForOpenReviews();
+    if (workspaceConfig.get('refreshInterval') > 0) setRefreshInterval();
 }
 
 function getUsers() {
@@ -83,6 +87,17 @@ function checkForOpenReviews(): void {
         },
         err => console.error(err)
     );
+}
+
+function setRefreshInterval(): void {
+    let minutes = <number> vscode.workspace.getConfiguration('upsource').get('refreshInterval'),
+        millis = minutes * 60 * 1000;
+        
+    setTimeout(() => {
+        _refreshInterval = setInterval(() => {
+            _reviewDataProvider.refresh();
+        }, millis);
+    }, millis);
 }
 
 function showReviews(): void {
@@ -284,4 +299,6 @@ function showError(err) {
     console.error(err);
 }
 
-export function deactivate() {}
+export function deactivate() {
+    clearInterval(_refreshInterval);
+}
