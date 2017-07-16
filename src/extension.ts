@@ -43,8 +43,7 @@ export function activate(context: vscode.ExtensionContext) {
         { name: 'setup', callback: Config.setup },
         { name: 'showReviews', callback: showReviews },
         { name: 'createReview', callback: showCreateReviewQuickPicks },
-        { name: 'closeReview', callback: showCloseReviewQuickPicks },
-        { name: 'refreshDataProvider', callback: _reviewDataProvider.refresh }
+        { name: 'closeReview', callback: showCloseReviewQuickPicks }
     ];
 
     commands.forEach(command => {
@@ -56,6 +55,9 @@ export function activate(context: vscode.ExtensionContext) {
 
     vscode.commands.registerCommand('upsource.openReviewInBrowser', review => {
         openReviewInBrowser(review);
+    });
+    vscode.commands.registerCommand('upsource.refreshDataProvider', () => {
+        _reviewDataProvider.refresh();
     });
     vscode.commands.registerCommand('upsource.closeReviewAndRefresh', (item: ReviewTreeItem) => {
         Upsource.closeReview(item.review.reviewId).then(() => _reviewDataProvider.refresh());
