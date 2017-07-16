@@ -96,10 +96,8 @@ function setRefreshInterval(): void {
     let minutes = <number> vscode.workspace.getConfiguration('upsource').get('refreshInterval'),
         millis = minutes * 60 * 1000;
         
-    setTimeout(() => {
-        _refreshInterval = setInterval(() => {
-            _reviewDataProvider.refresh();
-        }, millis);
+    _refreshInterval = setInterval(() => {
+        _reviewDataProvider.refresh();
     }, millis);
 }
 
