@@ -6,6 +6,7 @@
  * - add revision to review via [UPS] addRevisionToReview
  * - browse all projects
  * - delete / rename review
+ * - close all
  */
 
 import * as vscode from 'vscode';
