@@ -3,7 +3,7 @@
     "displayName": "Upsource for VSCode",
     "description": "Manage your Upsource Reviews in VSCode.",
     "version": "1.4.0",
-    "preview": true,
+    "preview": false,
     "icon": "icon.png",
     "publisher": "kasperbauer",
     "keywords": [
