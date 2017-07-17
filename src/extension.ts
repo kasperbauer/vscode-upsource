@@ -87,8 +87,7 @@ function checkForOpenReviews(): void {
                     'There are open Upsource reviews for this project.'
                 );
             }
-        },
-        err => console.error(err)
+        }
     );
 }
 
@@ -297,7 +296,6 @@ function closeReview(review: ReviewDescriptorDTO) {
 
 function showError(err) {
     vscode.window.showErrorMessage(err);
-    console.error(err);
 }
 
 export function deactivate() {

@@ -63,7 +63,6 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
                     resolve(items);
                 },
                 err => {
-                    console.error(err);
                     reject(err);
                 }
             );

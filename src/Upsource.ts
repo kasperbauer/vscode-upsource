@@ -42,12 +42,6 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                         }
 
                         if (err) {
-                            console.log('ERROR', err);
-
-                            if (err) {
-                                vscode.window.showErrorMessage(err.message + ' (' + err.code + ')');
-                            }
-
                             reject(err);
                             return;
                         }
