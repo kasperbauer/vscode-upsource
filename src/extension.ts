@@ -278,6 +278,8 @@ function createReview(branch = null, revisions = null): void {
             vscode.window.showInformationMessage(
                 "Review '" + review.reviewId.reviewId + "' successfully created."
             );
+
+            _reviewDataProvider.refresh();
         },
         err => showError(err)
     );
