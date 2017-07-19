@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.5.0] 2017-07-19
 ### Added
 - create review from revisions list
+- added icons
 
 ## [1.4.1] 2017-07-18
 ### Fixed
