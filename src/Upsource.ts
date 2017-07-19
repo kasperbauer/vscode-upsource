@@ -1,9 +1,9 @@
-import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import * as vscode from 'vscode';
 import * as request from 'request';
 
 import Config from './Config';
 import { BranchListDTO } from './models/BranchListDTO';
+import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewIdDTO } from './models/ReviewIdDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
@@ -138,9 +138,23 @@ function getUsers(pattern: string = ''): Promise<FullUserInfoDTO[]> {
     });
 }
 
+function getRevisions(): Promise<RevisionDescriptorListDTO> {
+    let params = {
+        limit: 99
+    };
+
+    return new Promise<RevisionDescriptorListDTO>((resolve, reject) => {
+        sendAPIRequest('getRevisionsList', 'POST', params).then(
+            res => resolve(res.result),
+            err => reject(err)
+        );
+    });
+}
+
 export default {
     getReviewList,
     getBranches,
+    getRevisions,
     getUsers,
     createReview,
     closeReview
