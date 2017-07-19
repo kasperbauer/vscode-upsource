@@ -12,6 +12,7 @@
 import * as vscode from 'vscode';
 import * as git from 'git-rev-sync';
 import * as fs from 'fs';
+import * as moment from 'moment';
 
 import Config from './Config';
 import Upsource from './Upsource';
@@ -80,21 +81,19 @@ function getUsers() {
 }
 
 function checkForOpenReviews(): void {
-    Upsource.getReviewList('state: open').then(
-        res => {
-            if (res.totalCount) {
-                vscode.window.showInformationMessage(
-                    'There are open Upsource reviews for this project.'
-                );
-            }
+    Upsource.getReviewList('state: open').then(res => {
+        if (res.totalCount) {
+            vscode.window.showInformationMessage(
+                'There are open Upsource reviews for this project.'
+            );
         }
-    );
+    });
 }
 
 function setRefreshInterval(): void {
-    let minutes = <number> vscode.workspace.getConfiguration('upsource').get('refreshInterval'),
+    let minutes = <number>vscode.workspace.getConfiguration('upsource').get('refreshInterval'),
         millis = minutes * 60 * 1000;
-        
+
     _refreshInterval = setInterval(() => {
         _reviewDataProvider.refresh();
     }, millis);
@@ -208,6 +207,13 @@ function showCreateReviewQuickPicks(): void {
                 branch: null,
                 revisions: null,
                 action: 'getBranches'
+            },
+            {
+                label: 'For specific commit',
+                description: 'Show revisions list',
+                branch: null,
+                revisions: null,
+                action: 'getRevisions'
             }
         ];
 
@@ -241,6 +247,9 @@ function showCreateReviewQuickPicks(): void {
                 case 'getBranches':
                     showBranchesQuickPicks();
                     break;
+                case 'getRevisions':
+                    showRevisionsQuickPicks();
+                    break;
             }
             return;
         }
@@ -268,6 +277,34 @@ function showBranchesQuickPicks(): void {
             createReview(selectedItem.branch);
         });
     });
+}
+
+function showRevisionsQuickPicks(): void {
+    Upsource.getRevisions().then(
+        res => {
+            let items = res.revision.map(revision => {
+                let author = _users.find(user => user.userId == revision.authorId) || null,
+                    date = moment(revision.revisionDate).format('l LT');
+
+                let detail = '';
+                if (author) detail += author.name + ', ';
+                detail += date;
+
+                return {
+                    label: revision.revisionCommitMessage.split('\n')[0],
+                    description: revision.shortRevisionId,
+                    detail: (author || date) ? detail : null,
+                    revisions: [revision.revisionId]
+                };
+            });
+
+            vscode.window.showQuickPick(items).then(selectedItem => {
+                if (!selectedItem) return;
+                createReview(null, selectedItem.revisions);
+            });
+        },
+        err => console.log(err)
+    );
 }
 
 function createReview(branch = null, revisions = null): void {
