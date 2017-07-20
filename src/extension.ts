@@ -54,15 +54,20 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(subscription);
     });
 
-    vscode.commands.registerCommand('upsource.openReviewInBrowser', review => {
+    let open = vscode.commands.registerCommand('upsource.openReviewInBrowser', review => {
         openReviewInBrowser(review);
     });
-    vscode.commands.registerCommand('upsource.refreshDataProvider', () => {
+    context.subscriptions.push(open);
+    
+    let refresh = vscode.commands.registerCommand('upsource.refreshDataProvider', () => {
         _reviewDataProvider.refresh();
     });
-    vscode.commands.registerCommand('upsource.closeReviewAndRefresh', (item: ReviewTreeItem) => {
+    context.subscriptions.push(refresh);
+    
+    let close = vscode.commands.registerCommand('upsource.closeReviewAndRefresh', (item: ReviewTreeItem) => {
         Upsource.closeReview(item.review.reviewId).then(() => _reviewDataProvider.refresh());
     });
+    context.subscriptions.push(close);    
 
     /*
      * ON INIT
@@ -293,7 +298,7 @@ function showRevisionsQuickPicks(): void {
                 return {
                     label: revision.revisionCommitMessage.split('\n')[0],
                     description: revision.shortRevisionId,
-                    detail: (author || date) ? detail : null,
+                    detail: author || date ? detail : null,
                     revisions: [revision.revisionId]
                 };
             });
