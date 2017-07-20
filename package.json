@@ -2,7 +2,7 @@
     "name": "vscode-upsource",
     "displayName": "Upsource for VSCode",
     "description": "Manage your Upsource Reviews in VSCode.",
-    "version": "1.4.1",
+    "version": "1.5.0",
     "preview": false,
     "icon": "icon.png",
     "publisher": "kasperbauer",
@@ -66,8 +66,8 @@
                 "command": "upsource.createReview",
                 "title": "Upsource: Create Review",
                 "icon": {
-                    "light": "resources/light/document.svg",
-                    "dark": "resources/dark/document.svg"
+                    "light": "resources/light/plus.svg",
+                    "dark": "resources/dark/plus.svg"
                 }
             },
             {
@@ -110,9 +110,9 @@
             }
         },
         "views": {
-			"explorer": [
-				{
-					"id": "upsourceView",
+            "explorer": [
+                {
+                    "id": "upsourceView",
                     "name": "Upsource"
                 }
             ]
@@ -154,6 +154,7 @@
     "dependencies": {
         "@types/request": "^0.0.45",
         "git-rev-sync": "^1.9.1",
+        "moment": "^2.18.1",
         "request": "^2.81.0"
     }
 }

@@ -34,8 +34,8 @@ export default class ReviewsDataProvider implements vscode.TreeDataProvider<Revi
                         items = res.reviews.map(review => {
                             let title = review.reviewId.reviewId + ` (${review.title})`;
                             // if (review.state == ReviewStateEnum.Closed) title = '🔒 ' + title;
-                            if (review.isReadyToClose) title += ' ✅';
-                            else if (review.discussionCounter.hasUnresolved) title += ' 💬';
+                            // if (review.isReadyToClose) title += ' ✅';
+                            if (review.discussionCounter.hasUnresolved) title += ' 💬';
 
                             return new ReviewTreeItem(
                                 title,

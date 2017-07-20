@@ -19,9 +19,10 @@ export class ReviewTreeItem extends vscode.TreeItem {
                 arguments: [ this.review ]
             };
 
+            let icon = review.isReadyToClose ? 'check.svg' : 'document.svg';
             this.iconPath = {
-                light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', 'document.svg'),
-                dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', 'document.svg')
+                light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', icon),
+                dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', icon)
             };            
         }
 
