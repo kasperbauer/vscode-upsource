@@ -20,6 +20,8 @@ export class ReviewTreeItem extends vscode.TreeItem {
                 arguments: [ this.review ]
             };
 
+            if (review.isUnread) this.label = `* ${this.label}`;
+
             let icon = 'code.svg';
             if (review.isReadyToClose) icon = 'check.svg';
             if (review.discussionCounter.hasUnresolved) icon = 'concern.svg';
