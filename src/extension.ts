@@ -5,8 +5,9 @@
  * - search for revision via [UPS] getRevisionsListFiltered
  * - add revision to review via [UPS] addRevisionToReview
  * - browse all projects
- * - delete / rename review
+ * - delete / rename review ([UPS] renameReview)
  * - close all
+ * - show project infos ([UPS] getProjectInfo)
  */
 
 import * as vscode from 'vscode';
