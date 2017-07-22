@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 448 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:1.41421;">
+    <path d="M224,420C213,420 204,411 204,400L204,336C204,325 213,316 224,316C235,316 244,325 244,336L244,400C244,411 235,420 224,420ZM448,272L448,464C448,490.5 426.5,512 400,512L48,512C21.5,512 0,490.5 0,464L0,272C0,245.5 21.5,224 48,224L64,224L64,160C64,71.6 136,-0.3 224.5,0C312.9,0.3 384,73.1 384,161.5L384,224L400,224C426.5,224 448,245.5 448,272ZM96,224L352,224L352,160C352,89.4 294.6,32 224,32C153.4,32 96,89.4 96,160L96,224ZM416,464L416,272C416,263.2 408.8,256 400,256L48,256C39.2,256 32,263.2 32,272L32,464C32,472.8 39.2,480 48,480L400,480C408.8,480 416,472.8 416,464Z" style="fill:rgb(194,196,198);fill-rule:nonzero;"/>
+</svg>
