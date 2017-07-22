@@ -1,2 +1,4 @@
 out
 node_modules
+upsource.json
+*.vsix
