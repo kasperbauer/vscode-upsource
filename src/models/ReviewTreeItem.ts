@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
+import { ReviewStateEnum } from './Enums';
 import { ReviewDescriptorDTO } from './ReviewDescriptorDTO';
 
 export class ReviewTreeItem extends vscode.TreeItem {
@@ -19,7 +20,11 @@ export class ReviewTreeItem extends vscode.TreeItem {
                 arguments: [ this.review ]
             };
 
-            let icon = review.isReadyToClose ? 'check.svg' : 'document.svg';
+            let icon = 'code.svg';
+            if (review.isReadyToClose) icon = 'check.svg';
+            if (review.discussionCounter.hasUnresolved) icon = 'concern.svg';
+            if (review.state == ReviewStateEnum.Closed) icon = 'closed.svg';
+
             this.iconPath = {
                 light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', icon),
                 dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', icon)
