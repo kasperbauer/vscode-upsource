@@ -173,7 +173,8 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
 
                     let description = review.title;
 
-                    let detail = review.state == ReviewStateEnum.Open ? '️⚠️ open' : '🔒 closed';
+                    let detail = review.state == ReviewStateEnum.Open ? '️📄 open' : '🔒 closed';
+                    if (Upsource.hasRaisedConcerns(review)) detail = '️⚠️ concerns raised';
                     if (review.isReadyToClose) detail = '✅ ready to close';
                     if (author) detail += ', ' + author.name;
                     detail += ', ' + review.participants.length + ' participants';

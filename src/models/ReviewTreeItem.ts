@@ -1,7 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { ReviewStateEnum } from './Enums';
+import Upsource from '../Upsource';
+import { ReviewStateEnum, ParticipantStateEnum } from './Enums';
 import { ReviewDescriptorDTO } from './ReviewDescriptorDTO';
 
 export class ReviewTreeItem extends vscode.TreeItem {
@@ -17,28 +18,47 @@ export class ReviewTreeItem extends vscode.TreeItem {
             this.command = {
                 command: 'upsource.openReviewInBrowser',
                 title: '',
-                arguments: [ this.review ]
+                arguments: [review]
             };
 
             if (review.isUnread) this.label = `* ${this.label}`;
 
-            let icon = 'code.svg';
+            let icon = 'code.svg',
+                concernRaised = Upsource.hasRaisedConcerns(review);
+
+            if (concernRaised) icon = 'concern.svg';
             if (review.isReadyToClose) icon = 'check.svg';
-            if (review.discussionCounter.hasUnresolved) icon = 'concern.svg';
             if (review.state == ReviewStateEnum.Closed) icon = 'closed.svg';
 
             this.iconPath = {
                 light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', icon),
                 dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', icon)
-            };            
+            };
         }
 
         if (contextValue == 'folder') {
             this.iconPath = {
-                light: path.join(__filename, '..', '..', '..', '..', 'resources', 'light', 'folder.svg'),
-                dark: path.join(__filename, '..', '..', '..', '..', 'resources', 'dark', 'folder.svg')
-            };            
+                light: path.join(
+                    __filename,
+                    '..',
+                    '..',
+                    '..',
+                    '..',
+                    'resources',
+                    'light',
+                    'folder.svg'
+                ),
+                dark: path.join(
+                    __filename,
+                    '..',
+                    '..',
+                    '..',
+                    '..',
+                    'resources',
+                    'dark',
+                    'folder.svg'
+                )
+            };
         }
-
     }
 }
