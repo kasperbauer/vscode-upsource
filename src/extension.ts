@@ -1,15 +1,3 @@
-/*
- * TODO:
- *
- * - select revision via [UPS] getRevisionsList / [UPS] findCommits
- * - search for revision via [UPS] getRevisionsListFiltered
- * - add revision to review via [UPS] addRevisionToReview
- * - browse all projects
- * - delete / rename review ([UPS] renameReview)
- * - close all
- * - show project infos ([UPS] getProjectInfo)
- */
-
 import * as vscode from 'vscode';
 import * as git from 'git-rev-sync';
 import * as fs from 'fs';
