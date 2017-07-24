@@ -149,7 +149,7 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
                     let author: any = review.participants.find(
                         participant => participant.role == RoleInReviewEnum.Author
                     );
-                    if (author) author = Upsource.users.find(user => user.userId == author.userId) || null;
+                    if (author) author = Upsource.findUser(author.userId);
 
                     let label = review.reviewId.reviewId;
                     if (review.isUnread) label = `* ${label}`;
@@ -279,7 +279,7 @@ function showRevisionsQuickPicks(): void {
     Upsource.getRevisions().then(
         res => {
             let items = res.revision.map(revision => {
-                let author = Upsource.users.find(user => user.userId == revision.authorId) || null,
+                let author = Upsource.findUser(revision.authorId),
                     date = moment(revision.revisionDate).format('l LT');
 
                 let detail = '';

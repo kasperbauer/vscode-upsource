@@ -113,6 +113,10 @@ export default class Upsource {
         ).length;
     }
 
+    findUser(userId: string): FullUserInfoDTO {
+        return this.users.find(user => user.userId == userId) || null;
+    }
+
     private sendAPIRequest(path: string, method: string, params: Object = {}): Promise<any> {
         return new Promise<any>((resolve, reject) => {
             Config.get().then(
