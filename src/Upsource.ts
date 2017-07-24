@@ -15,9 +15,10 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
         Config.get().then(
             (config: UpsConfig) => {
                 let body = Object.assign({ projectId: config.projectId }, params),
+                    timeout = 10000,
                     statusBarMessage = vscode.window.setStatusBarMessage(
                         'Contacting Upsource API...',
-                        3000
+                        timeout
                     );
 
                 console.log('SENDING REQUEST');
@@ -34,7 +35,8 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                                 new Buffer(config.login + ':' + config.password).toString('base64')
                         },
                         json: true,
-                        body
+                        body,
+                        timeout
                     },
                     (err, response, body) => {
                         if (typeof body != 'undefined' && typeof body.error != 'undefined') {
