@@ -169,7 +169,7 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
                     if (author) author = _users.find(user => user.userId == author.userId) || null;
 
                     let label = review.reviewId.reviewId;
-                    if (review.isUnread) label += ' *';
+                    if (review.isUnread) label = `* ${label}`;
 
                     let description = review.title;
 
