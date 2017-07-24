@@ -3,112 +3,114 @@ import * as fs from 'fs';
 
 import { UpsConfig } from './models/UpsConfig';
 
-const rootPath = vscode.workspace.rootPath;
+const { rootPath } = vscode.workspace;
 const configFilePath = rootPath + '/upsource.json';
 
-function configFileExists(): boolean {
-    return fs.existsSync(configFilePath);
-}
+export default class Config {
+    fileExists(): boolean {
+        return fs.existsSync(configFilePath);
+    }
 
-function getConfig(): Promise<UpsConfig> {
-    return new Promise<UpsConfig>((resolve, reject) => {
-        if (!configFileExists()) {
-            reject('upsource.json does not exist.');
-            return;
-        }
-
-        fs.readFile(configFilePath, 'utf8', function(err, data) {
-            if (err) reject(err);
-            else resolve(<UpsConfig>JSON.parse(data));
-        });
-    });
-}
-
-function setup() {
-    let defaultConfig = <UpsConfig>vscode.workspace
-            .getConfiguration()
-            .get('upsource.defaultConfig'),
-        settings = new UpsConfig(defaultConfig.url, defaultConfig.login, defaultConfig.projectId),
-        question = 'Please enter your ',
-        steps = [
-            {
-                prompt: question + 'Upsource URL',
-                placeHolder: defaultConfig.url || 'URL',
-                password: false
-            },
-            {
-                prompt: question + 'login identifier',
-                placeHolder: defaultConfig.login || 'login identifier',
-                password: false
-            },
-            {
-                prompt: question + 'password',
-                placeHolder: 'Password',
-                password: true
-            },
-            {
-                prompt: question + 'project ID',
-                placeHolder: defaultConfig.projectId || 'Project ID',
-                password: false
+    get(): Promise<UpsConfig> {
+        return new Promise<UpsConfig>((resolve, reject) => {
+            if (!this.fileExists()) {
+                reject('upsource.json does not exist.');
+                return;
             }
-        ];
 
-    vscode.window.showInputBox(steps[0]).then(input => {
-        if (typeof input == 'undefined') return;
-        if (input) settings.url = input;
+            fs.readFile(configFilePath, 'utf8', function(err, data) {
+                if (err) reject(err);
+                else resolve(<UpsConfig>JSON.parse(data));
+            });
+        });
+    }
 
-        vscode.window.showInputBox(steps[1]).then(input => {
+    setup() {
+        let defaultConfig = <UpsConfig>vscode.workspace
+                .getConfiguration()
+                .get('upsource.defaultConfig'),
+            settings = new UpsConfig(
+                defaultConfig.url,
+                defaultConfig.login,
+                defaultConfig.projectId
+            ),
+            question = 'Please enter your ',
+            steps = [
+                {
+                    prompt: question + 'Upsource URL',
+                    placeHolder: defaultConfig.url || 'URL',
+                    password: false
+                },
+                {
+                    prompt: question + 'login identifier',
+                    placeHolder: defaultConfig.login || 'login identifier',
+                    password: false
+                },
+                {
+                    prompt: question + 'password',
+                    placeHolder: 'Password',
+                    password: true
+                },
+                {
+                    prompt: question + 'project ID',
+                    placeHolder: defaultConfig.projectId || 'Project ID',
+                    password: false
+                }
+            ];
+
+        vscode.window.showInputBox(steps[0]).then(input => {
             if (typeof input == 'undefined') return;
-            if (input) settings.login = input;
+            if (input) settings.url = input;
 
-            vscode.window.showInputBox(steps[2]).then(input => {
+            vscode.window.showInputBox(steps[1]).then(input => {
                 if (typeof input == 'undefined') return;
-                if (input) settings.password = input;
+                if (input) settings.login = input;
 
-                vscode.window.showInputBox(steps[3]).then(input => {
+                vscode.window.showInputBox(steps[2]).then(input => {
                     if (typeof input == 'undefined') return;
-                    if (input) settings.projectId = input;
+                    if (input) settings.password = input;
 
-                    createAndOpenConfigFileIfNotExists(settings);
+                    vscode.window.showInputBox(steps[3]).then(input => {
+                        if (typeof input == 'undefined') return;
+                        if (input) settings.projectId = input;
+
+                        this.createAndOpenConfigFileIfNotExists(settings);
+                    });
                 });
             });
         });
-    });
-}
+    }
 
-function createAndOpenConfigFileIfNotExists(settings: UpsConfig = new UpsConfig()) {
-    let contents = JSON.stringify(settings);
+    private createAndOpenConfigFileIfNotExists(settings: UpsConfig = new UpsConfig()) {
+        let contents = JSON.stringify(settings);
 
-    fs.access(configFilePath, fs.constants.F_OK, err => {
-        if (!err) {
-            vscode.window.showInformationMessage('upsource.json already exists.');
-            showFileInTextEditor(configFilePath);
-            return;
-        }
-
-        fs.writeFile(configFilePath, contents, { encoding: 'utf8' }, err => {
-            showFileInTextEditor(configFilePath);
-            vscode.window.showInformationMessage('upsource.json has been created successfully.');
-        });
-    });
-}
-
-function showFileInTextEditor(filePath): Promise<vscode.TextDocument> {
-    return new Promise<vscode.TextDocument>((resolve, reject) => {
-        vscode.workspace.openTextDocument(filePath).then(
-            (textDocument: vscode.TextDocument) => {
-                vscode.window.showTextDocument(textDocument);
-                resolve(textDocument);
-            },
-            err => {
-                reject(err);
+        fs.access(configFilePath, fs.constants.F_OK, err => {
+            if (!err) {
+                vscode.window.showInformationMessage('upsource.json already exists.');
+                this.showFileInTextEditor(configFilePath);
+                return;
             }
-        );
-    });
-}
 
-export default {
-    get: getConfig,
-    setup: setup,
-    fileExists: configFileExists
-};
+            fs.writeFile(configFilePath, contents, { encoding: 'utf8' }, err => {
+                this.showFileInTextEditor(configFilePath);
+                vscode.window.showInformationMessage(
+                    'upsource.json has been created successfully.'
+                );
+            });
+        });
+    }
+
+    private showFileInTextEditor(filePath): Promise<vscode.TextDocument> {
+        return new Promise<vscode.TextDocument>((resolve, reject) => {
+            vscode.workspace.openTextDocument(filePath).then(
+                (textDocument: vscode.TextDocument) => {
+                    vscode.window.showTextDocument(textDocument);
+                    resolve(textDocument);
+                },
+                err => {
+                    reject(err);
+                }
+            );
+        });
+    }
+}

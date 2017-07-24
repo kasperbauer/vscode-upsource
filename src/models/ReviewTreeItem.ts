@@ -1,9 +1,11 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import Upsource from '../Upsource';
+import UpsourceService from '../Upsource';
 import { ReviewStateEnum, ParticipantStateEnum } from './Enums';
 import { ReviewDescriptorDTO } from './ReviewDescriptorDTO';
+
+const Upsource = new UpsourceService;
 
 export class ReviewTreeItem extends vscode.TreeItem {
     constructor(
