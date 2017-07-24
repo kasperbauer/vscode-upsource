@@ -159,14 +159,20 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
                     let label = review.reviewId.reviewId;
                     if (review.isUnread) label = `* ${label}`;
 
-                    let description = review.title;
-
-                    let detail = review.state == ReviewStateEnum.Open ? '️📄 open' : '🔒 closed';
-                    if (Upsource.hasRaisedConcerns(review)) detail = '️⚠️ concerns raised';
+                    let description = review.title,
+                        date = moment(review.updatedAt).format('l LT'),
+                        detail = ''; 
+                        
                     if (review.isReadyToClose) detail = '✅ ready to close';
-                    if (author) detail += ', ' + author.name;
-                    detail += ', ' + review.participants.length + ' participants';
-                    detail += ', ' + review.discussionCounter.counter + ' discussions';
+                    else if (Upsource.hasRaisedConcerns(review)) detail = '️⚠️ concerns raised';
+                    else if (review.state == ReviewStateEnum.Closed) detail = '🔒 closed';
+                    else if (review.state == ReviewStateEnum.Open) detail = '️📄 open';
+
+                    if (author) detail += `, ${author.name}`;
+                    detail += `, ${review.participants.length} participants`;
+                    detail += `, ${review.discussionCounter.counter} discussion`;
+                    if (review.discussionCounter.counter != 1) detail += 's';
+                    if (date) detail += ` (${date})`;
 
                     return { label, description, detail, review };
                 });
