@@ -163,10 +163,10 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
                         date = moment(review.updatedAt).format('l LT'),
                         detail = ''; 
                         
-                    if (review.isReadyToClose) detail = '✅ ready to close';
-                    else if (Upsource.hasRaisedConcerns(review)) detail = '️⚠️ concerns raised';
+                    if (review.state == ReviewStateEnum.Open) detail = '️📄 open';
                     else if (review.state == ReviewStateEnum.Closed) detail = '🔒 closed';
-                    else if (review.state == ReviewStateEnum.Open) detail = '️📄 open';
+                    if (Upsource.hasRaisedConcerns(review)) detail = '️⚠️ concerns raised';
+                    if (review.isReadyToClose) detail = '✅ ready to close';
 
                     if (author) detail += `, ${author.name}`;
                     detail += `, ${review.participants.length} participants`;
