@@ -8,3 +8,5 @@
 
 - [ ] watch review  
 `addParticipantToReview`
+
+- [ ] open project in browser
