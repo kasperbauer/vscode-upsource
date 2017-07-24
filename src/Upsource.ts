@@ -21,7 +21,7 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                         timeout
                     );
 
-                console.log('SENDING REQUEST');
+                console.log(`SENDING REQUEST '${path}'`);
                 console.log(body);
 
                 request(
@@ -40,18 +40,19 @@ function sendAPIRequest(path: string, method: string, params: Object = {}): Prom
                     },
                     (err, response, body) => {
                         if (typeof body != 'undefined' && typeof body.error != 'undefined') {
-                            err = body.error;
+                            err = body.error.message;
                         }
+
+                        console.log(`RESPONSE '${path}'`);
+                        console.log(err || body);
+
+                        statusBarMessage.dispose();
 
                         if (err) {
                             reject(err);
                             return;
                         }
 
-                        console.log('RESPONSE');
-                        console.log(body);
-
-                        statusBarMessage.dispose();
                         resolve(body);
                     }
                 );
