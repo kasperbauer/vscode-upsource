@@ -2,7 +2,7 @@
     "name": "vscode-upsource",
     "displayName": "Upsource for VSCode",
     "description": "Manage your Upsource Reviews in VSCode.",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "preview": false,
     "icon": "icon.png",
     "publisher": "kasperbauer",
