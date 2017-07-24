@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.5.2] 2017-07-24
+- fixed wrong handling of api errors
+
 ## [1.5.1] 2017-07-23
 ### Added
 - unread indicator 
@@ -13,7 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [1.5.0] 2017-07-20
 ### Added
 - create review from revisions list
-- added icons
+- tree icons
 ### Fixed
 - vscode helper going nuts
 
