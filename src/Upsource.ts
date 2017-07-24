@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as request from 'request';
 
 import Config from './Config';
+import { ParticipantStateEnum } from './models/Enums';
 import { BranchListDTO } from './models/BranchListDTO';
 import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
@@ -154,11 +155,18 @@ function getRevisions(): Promise<RevisionDescriptorListDTO> {
     });
 }
 
+function hasRaisedConcerns(review: ReviewDescriptorDTO): boolean {
+    return !! review.participants.filter(
+        participant => participant.state == ParticipantStateEnum.Rejected
+    ).length;
+}
+
 export default {
     getReviewList,
     getBranches,
     getRevisions,
     getUsers,
     createReview,
-    closeReview
+    closeReview,
+    hasRaisedConcerns
 };

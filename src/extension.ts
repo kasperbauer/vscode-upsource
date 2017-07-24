@@ -1,15 +1,3 @@
-/*
- * TODO:
- *
- * - select revision via [UPS] getRevisionsList / [UPS] findCommits
- * - search for revision via [UPS] getRevisionsListFiltered
- * - add revision to review via [UPS] addRevisionToReview
- * - browse all projects
- * - delete / rename review ([UPS] renameReview)
- * - close all
- * - show project infos ([UPS] getProjectInfo)
- */
-
 import * as vscode from 'vscode';
 import * as git from 'git-rev-sync';
 import * as fs from 'fs';
@@ -173,7 +161,8 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
 
                     let description = review.title;
 
-                    let detail = review.state == ReviewStateEnum.Open ? '️⚠️ open' : '🔒 closed';
+                    let detail = review.state == ReviewStateEnum.Open ? '️📄 open' : '🔒 closed';
+                    if (Upsource.hasRaisedConcerns(review)) detail = '️⚠️ concerns raised';
                     if (review.isReadyToClose) detail = '✅ ready to close';
                     if (author) detail += ', ' + author.name;
                     detail += ', ' + review.participants.length + ' participants';
