@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as request from 'request';
 
 import ConfigService from './Config';
+import { ParticipantInReviewDTO } from './models/ParticipantInReviewDTO';
 import { ParticipantStateEnum } from './models/Enums';
 import { BranchListDTO } from './models/BranchListDTO';
 import { FullUserInfoDTO } from './models/FullUserInfoDTO';
@@ -115,6 +116,20 @@ export default class Upsource {
 
     findUser(userId: string): FullUserInfoDTO {
         return this.users.find(user => user.userId == userId) || null;
+    }
+        
+    removeParticipantFromReview(reviewId: ReviewIdDTO, participant: ParticipantInReviewDTO): Promise<any> {
+        let params = {
+            reviewId,
+            participant
+        };
+
+        return new Promise<any>((resolve, reject) => {
+            this.sendAPIRequest('removeParticipantFromReview', 'POST', params).then(
+                res => resolve(),
+                err => reject(err)
+            );
+        });
     }
 
     private sendAPIRequest(path: string, method: string, params: Object = {}): Promise<any> {

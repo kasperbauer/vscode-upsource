@@ -312,6 +312,14 @@ function createReview(branch = null, revisions = null): void {
                 "Review '" + review.reviewId.reviewId + "' successfully created."
             );
 
+            let resetParticipants = <boolean>vscode.workspace.getConfiguration('upsource').get('resetParticipantsOnCreate');
+            if (resetParticipants) {
+                let participants = review.participants.filter((participant) => participant.role != RoleInReviewEnum.Author);
+                participants.forEach((participant) => {
+                    Upsource.removeParticipantFromReview(review.reviewId, participant);
+                });
+            }
+
             _reviewDataProvider.refresh();
         },
         err => showError(err)
