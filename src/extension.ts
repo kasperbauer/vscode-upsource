@@ -1,22 +1,10 @@
-/*
- * TODO:
- *
- * - select revision via [UPS] getRevisionsList / [UPS] findCommits
- * - search for revision via [UPS] getRevisionsListFiltered
- * - add revision to review via [UPS] addRevisionToReview
- * - browse all projects
- * - delete / rename review ([UPS] renameReview)
- * - close all
- * - show project infos ([UPS] getProjectInfo)
- */
-
 import * as vscode from 'vscode';
 import * as git from 'git-rev-sync';
 import * as fs from 'fs';
 import * as moment from 'moment';
 
-import Config from './Config';
-import Upsource from './Upsource';
+import ConfigService from './Config';
+import UpsourceService from './Upsource';
 import ReviewsDataProvider from './ReviewsDataProvider';
 import { FullUserInfoDTO } from './models/FullUserInfoDTO';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
@@ -26,10 +14,11 @@ import { ReviewStateEnum, RoleInReviewEnum } from './models/Enums';
 import { ReviewTreeItem } from './models/ReviewTreeItem';
 import { UpsConfig } from './models/UpsConfig';
 
-const rootPath = vscode.workspace.rootPath;
+const { rootPath } = vscode.workspace;
+const Upsource = new UpsourceService;
+const Config = new ConfigService;
 
-let _users: FullUserInfoDTO[] = [],
-    _refreshInterval: any = null,
+let _refreshInterval: any = null,
     _reviewDataProvider = new ReviewsDataProvider();
 
 export function activate(context: vscode.ExtensionContext) {
@@ -73,17 +62,11 @@ export function activate(context: vscode.ExtensionContext) {
     /*
      * ON INIT
      */
-    getUsers();
+    Upsource.getUsers();
 
     let workspaceConfig = vscode.workspace.getConfiguration('upsource');
     if (workspaceConfig.get('checkForOpenReviewsOnLaunch')) checkForOpenReviews();
     if (workspaceConfig.get('refreshInterval') > 0) setRefreshInterval();
-}
-
-function getUsers() {
-    Upsource.getUsers().then(users => {
-        _users = users;
-    });
 }
 
 function checkForOpenReviews(): void {
@@ -166,18 +149,25 @@ function showReviewQuickPicks(query?: string, callback?: Function): void {
                     let author: any = review.participants.find(
                         participant => participant.role == RoleInReviewEnum.Author
                     );
-                    if (author) author = _users.find(user => user.userId == author.userId) || null;
+                    if (author) author = Upsource.findUser(author.userId);
 
                     let label = review.reviewId.reviewId;
                     if (review.isUnread) label = `* ${label}`;
 
-                    let description = review.title;
-
-                    let detail = review.state == ReviewStateEnum.Open ? '️⚠️ open' : '🔒 closed';
+                    let description = review.title,
+                        date = moment(review.updatedAt).format('l LT'),
+                        detail = ''; 
+                        
+                    if (review.state == ReviewStateEnum.Open) detail = '️📄 open';
+                    else if (review.state == ReviewStateEnum.Closed) detail = '🔒 closed';
+                    if (Upsource.hasRaisedConcerns(review)) detail = '️⚠️ concerns raised';
                     if (review.isReadyToClose) detail = '✅ ready to close';
-                    if (author) detail += ', ' + author.name;
-                    detail += ', ' + review.participants.length + ' participants';
-                    detail += ', ' + review.discussionCounter.counter + ' discussions';
+
+                    if (author) detail += `, ${author.name}`;
+                    detail += `, ${review.participants.length} participants`;
+                    detail += `, ${review.discussionCounter.counter} discussion`;
+                    if (review.discussionCounter.counter != 1) detail += 's';
+                    if (date) detail += ` (${date})`;
 
                     return { label, description, detail, review };
                 });
@@ -289,7 +279,7 @@ function showRevisionsQuickPicks(): void {
     Upsource.getRevisions().then(
         res => {
             let items = res.revision.map(revision => {
-                let author = _users.find(user => user.userId == revision.authorId) || null,
+                let author = Upsource.findUser(revision.authorId),
                     date = moment(revision.revisionDate).format('l LT');
 
                 let detail = '';
@@ -321,6 +311,14 @@ function createReview(branch = null, revisions = null): void {
             vscode.window.showInformationMessage(
                 "Review '" + review.reviewId.reviewId + "' successfully created."
             );
+
+            let resetParticipants = <boolean>vscode.workspace.getConfiguration('upsource').get('resetParticipantsOnCreate');
+            if (resetParticipants) {
+                let participants = review.participants.filter((participant) => participant.role != RoleInReviewEnum.Author);
+                participants.forEach((participant) => {
+                    Upsource.removeParticipantFromReview(review.reviewId, participant);
+                });
+            }
 
             _reviewDataProvider.refresh();
         },

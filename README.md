@@ -47,6 +47,7 @@ Example:
 Add your default config values here for faster setup. Any values provided will be pre-filled
 in the setup dialog. Password is left out for security reasons.
 
+
 Example:
 ```json
 "upsource.defaultConfig": [
@@ -60,6 +61,9 @@ Example:
 
 `upsource.refreshInterval`  
 Number of minutes between auto-refresh. Set to 0 for no refresh.
+
+`upsource.resetParticipantsOnCreate`  
+Resets all auto-assigned participants on creating a new review, leaving the author only.
 
 ## Known Issues
 

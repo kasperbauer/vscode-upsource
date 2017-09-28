@@ -4,7 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.0] 2017-09-28
+### Added
+- new setting: resetParticipantsOnCreate
+### Misc
+- code refactoring
+- visual improvements
+
+## [1.5.3] 2017-07-24
+### Changed
+- change quickpick icons to conform to custom view
+
 ## [1.5.2] 2017-07-24
+### Fixed
 - fixed wrong handling of api errors
 
 ## [1.5.1] 2017-07-23

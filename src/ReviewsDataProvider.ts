@@ -1,11 +1,14 @@
 import * as vscode from 'vscode';
 
-import Config from './Config';
-import Upsource from './Upsource';
+import ConfigService from './Config';
+import UpsourceService from './Upsource';
 import { ReviewDescriptorDTO } from './models/ReviewDescriptorDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
 import { ReviewStateEnum } from './models/Enums';
 import { ReviewTreeItem } from './models/ReviewTreeItem';
+
+const Upsource = new UpsourceService;
+const Config = new ConfigService;
 
 export default class ReviewsDataProvider implements vscode.TreeDataProvider<ReviewTreeItem> {
     private _onDidChangeTreeData: vscode.EventEmitter<ReviewTreeItem | null> = new vscode.EventEmitter<ReviewTreeItem | null>();
