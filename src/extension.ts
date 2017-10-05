@@ -31,11 +31,12 @@ export function activate(context: vscode.ExtensionContext) {
      * COMMANDS
      */
     let commands = [
-        { name: 'setup', callback: Config.setup },
+        { name: 'setup', callback: showSetupDialog },
         { name: 'showReviews', callback: showReviews },
         { name: 'createReview', callback: showCreateReviewQuickPicks },
         { name: 'closeReview', callback: showCloseReviewQuickPicks }
     ];
+    
 
     commands.forEach(command => {
         let subscription = vscode.commands.registerCommand(`upsource.${command.name}`, () =>
@@ -67,6 +68,10 @@ export function activate(context: vscode.ExtensionContext) {
     let workspaceConfig = vscode.workspace.getConfiguration('upsource');
     if (workspaceConfig.get('checkForOpenReviewsOnLaunch')) checkForOpenReviews();
     if (workspaceConfig.get('refreshInterval') > 0) setRefreshInterval();
+}
+
+function showSetupDialog() {
+    Config.setup();
 }
 
 function checkForOpenReviews(): void {
