@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.6.1] 2017-10-05
+### Fixed
+- upsource.json not being created via setup dialog (#1)
+
 ## [1.6.0] 2017-09-28
 ### Added
 - new setting: resetParticipantsOnCreate
