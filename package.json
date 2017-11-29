@@ -48,6 +48,7 @@
         "onCommand:upsource.showReviews",
         "onCommand:upsource.createReview",
         "onCommand:upsource.closeReview",
+        "onCommand:upsource.addParticipantToReview",
         "workspaceContains:upsource.json",
         "onView:upsourceView"
     ],
@@ -69,6 +70,10 @@
                     "light": "resources/light/plus.svg",
                     "dark": "resources/dark/plus.svg"
                 }
+            },
+            {
+                "command": "upsource.addParticipantToReview",
+                "title": "Upsource: Add participant to Review"
             },
             {
                 "command": "upsource.closeReviewAndRefresh",

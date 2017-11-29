@@ -24,6 +24,9 @@ Close reviews that are ready to close.
 `Upsource: Refresh`  
 Fetches reviews and refreshes upsource custom view.
 
+`Upsource: Add participant to Review`
+Add a participan to the current review.
+
 ## Settings
 
 `upsource.checkForOpenReviewsOnLaunch`  
