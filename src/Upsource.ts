@@ -14,6 +14,7 @@ import { UpsConfig } from './models/UpsConfig';
 import { UsersForReviewDTO } from './models/UsersForReviewDTO';
 import { UsersOthersDTO } from './models/UsersOthersDTO';
 import { UserInfoResponseDTO } from './models/UserInfoResponseDTO';
+import { RoleInReviewEnum } from './models/Enums';
 
 const Config = new ConfigService;
 
@@ -152,8 +153,8 @@ export default class Upsource {
     public getUsersForReview(reviewId: ReviewIdDTO): Promise<UsersOthersDTO> {
         const params = {
             'reviewId': reviewId,
-            'role': 2,
-            'limit': 15
+            'role': RoleInReviewEnum.Reviewer,
+            'limit': 99
         }
         return new Promise<any>((resolve, reject) => {
             this.sendAPIRequest('getUsersForReview', 'POST', params).then(
