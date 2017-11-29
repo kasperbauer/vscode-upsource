@@ -19,7 +19,6 @@ export default class Config {
             }
 
             fs.readFile(configFilePath, 'utf8', function(err, data) {
-                console.log(`DATA: `,<UpsConfig>JSON.parse(data));
                 if (err) reject(err);
                 else resolve(<UpsConfig>JSON.parse(data));
             });
