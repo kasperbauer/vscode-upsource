@@ -1,4 +1,4 @@
-**This Project is not being maintained anymore.**
+**This project is not being maintained anymore.**
 
 ---
 
