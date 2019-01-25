@@ -1,3 +1,7 @@
+**This Project is not being maintained anymore.**
+
+---
+
 # vscode-upsource README
 
 Provides basic interaction with your upsource reviews.
