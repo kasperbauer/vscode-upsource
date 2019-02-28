@@ -13,6 +13,7 @@ import { ReviewListDTO } from './models/ReviewListDTO';
 import { ReviewStateEnum, RoleInReviewEnum } from './models/Enums';
 import { ReviewTreeItem } from './models/ReviewTreeItem';
 import { UpsConfig } from './models/UpsConfig';
+import { ParticipantInReviewDTO } from './models/ParticipantInReviewDTO';
 
 const { rootPath } = vscode.workspace;
 const Upsource = new UpsourceService;
@@ -34,7 +35,8 @@ export function activate(context: vscode.ExtensionContext) {
         { name: 'setup', callback: showSetupDialog },
         { name: 'showReviews', callback: showReviews },
         { name: 'createReview', callback: showCreateReviewQuickPicks },
-        { name: 'closeReview', callback: showCloseReviewQuickPicks }
+        { name: 'closeReview', callback: showCloseReviewQuickPicks },
+        { name: 'addParticipantToReview', callback: showParticipantsQuickPicks }
     ];
     
 
@@ -96,6 +98,11 @@ function setRefreshInterval(): void {
 function showReviews(): void {
     let customQueries = <any[]>vscode.workspace.getConfiguration().get('upsource.customQueries'),
         items: any[] = [
+            {
+                label: 'Current',
+                description: 'Current branch',
+                query: git.branch(rootPath)
+            },
             {
                 label: 'All',
                 description: 'All open & closed reviews',
@@ -298,7 +305,6 @@ function showRevisionsQuickPicks(): void {
                     revisions: [revision.revisionId]
                 };
             });
-
             vscode.window.showQuickPick(items).then(selectedItem => {
                 if (!selectedItem) return;
                 createReview(null, selectedItem.revisions);
@@ -308,27 +314,37 @@ function showRevisionsQuickPicks(): void {
     );
 }
 
-function createReview(branch = null, revisions = null): void {
-    Upsource.createReview(branch, revisions).then(
-        review => {
-            if (!review) return;
-
-            vscode.window.showInformationMessage(
-                "Review '" + review.reviewId.reviewId + "' successfully created."
-            );
-
-            let resetParticipants = <boolean>vscode.workspace.getConfiguration('upsource').get('resetParticipantsOnCreate');
-            if (resetParticipants) {
-                let participants = review.participants.filter((participant) => participant.role != RoleInReviewEnum.Author);
-                participants.forEach((participant) => {
-                    Upsource.removeParticipantFromReview(review.reviewId, participant);
-                });
-            }
-
-            _reviewDataProvider.refresh();
-        },
-        err => showError(err)
+const createReview = async(branch = null, revisions = null) => {
+    const review = await Upsource.createReview(branch, revisions);
+    if (!review) return;
+    vscode.window.showInformationMessage(
+        "Review '" + review.reviewId.reviewId + "' successfully created."
     );
+
+    let resetParticipants = <boolean>vscode.workspace.getConfiguration('upsource').get('resetParticipantsOnCreate');
+    if (resetParticipants) {
+        let participants = review.participants.filter((participant) => participant.role != RoleInReviewEnum.Author);
+        participants.forEach((participant) => {
+            Upsource.removeParticipantFromReview(review.reviewId, participant);
+        });
+    }
+
+    const config:UpsConfig = await Config.get();
+    const users = await Upsource.getUsersInfoForReview(review.reviewId);
+    const validUsers = users.infos.filter( user =>
+        config.reviewers.find(reviewer =>  reviewer.toLowerCase() === user.name.toLowerCase())
+    );
+    const all = await Promise.all(validUsers.map(user => {
+            return <ParticipantInReviewDTO>{
+                userId: user.userId,
+                role: RoleInReviewEnum.Reviewer
+            };
+        }).map((participant) => Upsource.addParticipantToReview(review.reviewId, participant))
+    );
+    vscode.window.showInformationMessage(
+        `Reviewers '${validUsers.map((user)=>user.name).join(', ')}' successfully added to review.`
+    );
+    _reviewDataProvider.refresh();
 }
 
 function closeReview(review: ReviewDescriptorDTO) {
@@ -341,6 +357,36 @@ function closeReview(review: ReviewDescriptorDTO) {
         err => showError(err)
     );
 }
+
+const showParticipantsQuickPicks = async() => {
+    const res = await Upsource.getReviewList(git.branch(rootPath));
+    if (res.totalCount !== 1 ) {
+        vscode.window.showErrorMessage("Please create a review for the current branch first");
+        return;
+    }
+    const review = res.reviews[0];
+    const users = await Upsource.getUsersInfoForReview(review.reviewId);
+    /*
+     * Construct the menu with possible reviewers.
+     */
+    const selectedItem = await vscode.window.showQuickPick(users.infos.map(user =>
+        ({
+            label: user.name,
+            description: user.email,
+            user: user
+        }))
+    );
+    if(!selectedItem) {
+        return;
+    }
+
+    await Upsource.addParticipantToReview(review.reviewId, <ParticipantInReviewDTO>{
+        userId: selectedItem.user.userId,
+        role: RoleInReviewEnum.Reviewer
+    });
+    vscode.window.showInformationMessage(`Participant '${selectedItem.user.name}' successfully added to review '${review.reviewId.reviewId}'.`);
+}
+
 
 function showError(err) {
     vscode.window.showErrorMessage(err);

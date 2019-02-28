@@ -4,5 +4,6 @@ export class UpsConfig {
         public login: string = '',
         public projectId: string = '',
         public password: string = '',
+        public reviewers: string[] = []
     ) {}
 };

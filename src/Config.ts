@@ -55,6 +55,11 @@ export default class Config {
                     prompt: question + 'project ID',
                     placeHolder: defaultConfig.projectId || 'Project ID',
                     password: false
+                },
+                {
+                    prompt: question + 'reviewers comma separated',
+                    placeHolder: 'Reviewers',
+                    password: false
                 }
             ];
 
@@ -74,7 +79,12 @@ export default class Config {
                         if (typeof input == 'undefined') return;
                         if (input) settings.projectId = input;
 
-                        this.createAndOpenConfigFileIfNotExists(settings);
+                        vscode.window.showInputBox(steps[4]).then(input => {
+                            if (typeof input == 'undefined') return;
+                            if (input) settings.reviewers = input.split(',').map(reviewer => reviewer.trim());
+
+                            this.createAndOpenConfigFileIfNotExists(settings);
+                        });
                     });
                 });
             });

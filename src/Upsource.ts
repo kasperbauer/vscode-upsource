@@ -11,6 +11,10 @@ import { ReviewIdDTO } from './models/ReviewIdDTO';
 import { ReviewListDTO } from './models/ReviewListDTO';
 import { RevisionDescriptorListDTO } from './models/RevisionDescriptorListDTO';
 import { UpsConfig } from './models/UpsConfig';
+import { UsersForReviewDTO } from './models/UsersForReviewDTO';
+import { UsersOthersDTO } from './models/UsersOthersDTO';
+import { UserInfoResponseDTO } from './models/UserInfoResponseDTO';
+import { RoleInReviewEnum } from './models/Enums';
 
 const Config = new ConfigService;
 
@@ -129,6 +133,58 @@ export default class Upsource {
                 res => resolve(),
                 err => reject(err)
             );
+        });
+    }
+
+    public addParticipantToReview(reviewId: ReviewIdDTO, participant: ParticipantInReviewDTO): Promise<any> {
+        let params = {
+            reviewId,
+            participant
+        };
+
+        return new Promise<any>((resolve, reject) => {
+            this.sendAPIRequest('addParticipantToReview', 'POST', params).then(
+                res => resolve(),
+                err => reject(err)
+            );
+        });
+    }
+
+    public getUsersForReview(reviewId: ReviewIdDTO): Promise<UsersOthersDTO> {
+        const params = {
+            'reviewId': reviewId,
+            'role': RoleInReviewEnum.Reviewer,
+            'limit': 99
+        }
+        return new Promise<any>((resolve, reject) => {
+            this.sendAPIRequest('getUsersForReview', 'POST', params).then(
+                res => resolve(res.result.result),
+                err => reject(err)
+            );
+        });
+    }
+
+    public getUserInfo(ids: string[]): Promise<UserInfoResponseDTO> {
+        const params = {
+            'ids': ids
+        }
+        return new Promise<any>((resolve, reject) => {
+            this.sendAPIRequest('getUserInfo', 'POST', params).then(
+                res => resolve(res.result),
+                err => reject(err)
+            );
+        });
+    }
+
+    public getUsersInfoForReview(reviewId: ReviewIdDTO): Promise<UserInfoResponseDTO> {
+
+        return new Promise<any>((resolve, reject) => {
+            this.getUsersForReview(reviewId).then((users) => {
+                this.getUserInfo(users.others).then(
+                    res => resolve(res),
+                    err => reject(err)
+                );
+            });
         });
     }
 
